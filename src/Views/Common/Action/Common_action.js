@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { LoginSuccessNavigateTo } from 'ResuableFunctions/LoginSuccessNavigateTo';
 import axiosInstance from 'Services/axiosInstance';
 import {
     updateModalShow,
@@ -75,17 +76,17 @@ export const handleResetValidation = dispatch => {
 // login api 
 export const handleLogin = (basicAuth, navigate) => async (dispatch) => {
     try {
-        dispatch(loginRequest()) 
+        dispatch(loginRequest())
         const { data } = await axios.post(`${process.env.REACT_APP_API_URL}/candidate_log_in`, {}, {
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Basic ${basicAuth}`,
             }
-        });         
+        });
 
         if (data.error_code === 0) {
-            dispatch(loginResponse(data))
-            navigate("/dashboard/home")
+            dispatch(loginResponse(data?.data))
+            LoginSuccessNavigateTo(data?.data?.user_role, navigate)
         } else {
             dispatch(updateToast({ message: data?.message, type: "error" }))
         }

@@ -6,9 +6,9 @@ import { ToastContainer } from "react-toastify";
 import Login from "Views/Common/Docs/Login";
 import Error from "Views/Common/Docs/error";
 import { InitializeProjectSetup } from "Views/Common/Docs/InitializeProjectSetup";
-import InterviewCandidatesHeader from "Components/Panel_compnent/InterviewCandidatesHeader";
-import InterviewCandidatesIndex from "Views/InterviewCandidates/Docs/InterviewCandidatesIndex";
 import InterviewCandidatesRegistration from "Views/InterviewCandidates/Docs/InterviewCandidatesRegistration";
+import InterviewCandidatesHome from "Views/InterviewCandidates/Docs/InterviewCandidatesHome";
+import InterviewCandidatesAuth from "Views/InterviewCandidates/Docs/InterviewCandidatesAuth";
 
 
 const App = () => {
@@ -22,8 +22,8 @@ const App = () => {
           <Route path="candidates_registration" element={<InterviewCandidatesRegistration />} />
 
           {/* interview candidates Views */}
-          <Route path="/interview_candidate" element={<InterviewCandidatesHeader />}>
-            <Route index element={<InterviewCandidatesIndex />} />
+          <Route path="candidates_home" element={<InterviewCandidatesAuth />}>
+            <Route index element={<InterviewCandidatesHome />} />
           </Route>
 
           <Route path="*" element={<Error />} />

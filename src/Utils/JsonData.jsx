@@ -192,7 +192,15 @@ const JsonData = () => {
         yearOfExp: [
             "0 to 6 Months",
             "6 Months & Above"
+        ],
+        interviewRound: [
+            "HR Round",
+            "Apptitude Round",
+            "Technical Round",
+            "Machine Test",
+            "Face to Face Interview",
         ]
+
     }
 
     const jsxJson = {

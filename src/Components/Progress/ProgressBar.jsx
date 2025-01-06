@@ -2,11 +2,15 @@ import React from 'react'
 import ProgressBar from 'react-bootstrap/ProgressBar';
 
 const ProgressBarComp = ({
-    componentFrom,
-    progressNow
+  componentFrom,
+  variant,
+  animated,
+  progressNow,
+  className
 }) => {
+
   return (
-    <ProgressBar animated now={progressNow}/>
+    <ProgressBar  animated={animated} now={progressNow} className={className} />
   )
 }
 

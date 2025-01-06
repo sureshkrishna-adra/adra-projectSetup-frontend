@@ -1,11 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import Cookies from 'js-cookie'
-import { getIndividualAnalyticsFailure, getIndividualAnalyticsRequest, getOverallAnalyticsRequest, resetOverallChartFilter } from "Slices/Pages_slice/Analytice_slice";
-import { blogDeletionResponse, getBlogRequest, getBlogResponse, updateAddBlogResponse, updateBlogEditData, updateBlogModalType, updateDeleteBlog, updateEditBlog } from "Slices/Pages_slice/Blog_slice";
-import { getCrmDashboardFailure, getCrmDashboardRequest, getCrmDashboardResponse, getCrmModalFailure, getCrmModalRequest, update_crm_status_entry_user_id, updateCrmStatusEntryFailure, updateCrmStatusEntryResponse } from "Slices/Pages_slice/Crm_slice";
-import { getDashboardRequest, getDashboardResponse } from "Slices/Pages_slice/dashboard_slice";
-import { getFeedbackFailure, getFeedbackRequest, getFeedbackResponse, updateFeedbackModal, updateFeedbackStatusFailure, updateFeedbackStatusResponse } from "Slices/Pages_slice/Feedback_slice";
-import { buyAndsellDeleteFailure, buyAndsellDeleteResponse, buyAndsellGetRequest, buyAndsellGetResponse, buyAndsellImageDeleteFailure, buyAndsellPostFailure, buyAndsellPostResponse, driverGetRequest, driverGetResponse, DriverPostFailure, DriverPostRequest, initializeFilterDetails, LoadDeleteFailure, LoadDeleteResponse, loadGetRequest, loadGetResponse, LoadPostFailure, LoadPostRequest, MobileNumVerificationRequest, ResetbuyAndsellFilterData, ResetDriverFilterData, ResetLoadFilterData, ResetTruckFilterData, truckGetRequest, truckGetResponse, TruckPostFailure, TruckPostRequest, updateCreateModalDetails, updateDeleteDetails, updateEditDetails } from "Slices/Pages_slice/Services_slice";
+import { updateCandidateData } from "Views/InterviewCandidates/Slice/interviewSlice";
 
 const commonSlice = createSlice({
     name: 'commonSlice',
@@ -299,261 +294,263 @@ const commonSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
-            //dashboard
-            .addCase(getDashboardRequest, (state, action) => {
-                state.totalCount = 0
-                state.pageSize = 10
-                state.currentPage = 1
-            })
-            .addCase(getDashboardResponse, (state, action) => {
-                state.totalCount = action.payload?.row_count
-                state.apply_filter = false
-                state.modalShow = false
-            })
-
-            //common 
-            .addCase(MobileNumVerificationRequest, (state, action) => {
+            //candidate register onChange validated false
+            .addCase(updateCandidateData, (state, action) => {
                 state.validated = false
             })
-            .addCase(updateCreateModalDetails, (state, action) => {
-                state.validated = false
-                state.modalShow = true
-            })
-            .addCase(updateDeleteDetails, (state, action) => {
-                state.modalShow = true
-            })
-            .addCase(updateEditDetails, (state, action) => {
-                state.modalShow = true
-            })
-            .addCase(initializeFilterDetails, (state, action) => {
-                state.modalShow = true
-            })
-
-
-            //load
-            .addCase(loadGetRequest, (state, action) => {
-                state.totalCount = 0
-                state.modalShow = false
-                state.apply_filter = false
-            })
-            .addCase(loadGetResponse, (state, action) => {
-                state.totalCount = action.payload?.total_no_of_data
-            })
-            .addCase(LoadPostRequest, (state, action) => {
-                state.modalShow = false
-                state.validated = false
-            })
-            .addCase(LoadPostFailure, (state, action) => {
-                state.Err = action.payload
-                state.Toast_Type = "error"
-            })
-            .addCase(LoadDeleteResponse, (state, action) => {
-                state.modalShow = false
-            })
-            .addCase(LoadDeleteFailure, (state, action) => {
-                state.Err = action.payload
-                state.Toast_Type = "error"
-            })
-            .addCase(ResetLoadFilterData, (state, action) => {
-                state.modalShow = false
-                state.apply_filter_clicked = false
-                state.apply_filter = false
-            })
 
 
 
-            //truck
-            .addCase(truckGetRequest, (state, action) => {
-                state.totalCount = 0
-                state.apply_filter = false
-                state.modalShow = false
-            })
-            .addCase(truckGetResponse, (state, action) => {
-                state.totalCount = action.payload?.total_no_of_data
-            })
-            .addCase(TruckPostRequest, (state, action) => {
-                state.modalShow = false
-                state.validated = false
-            })
-            .addCase(TruckPostFailure, (state, action) => {
-                state.Err = action.payload
-                state.Toast_Type = "error"
-            })
-            .addCase(ResetTruckFilterData, (state, action) => {
-                state.modalShow = false
-                state.apply_filter_clicked = false
-                state.apply_filter = false
-            })
 
 
-            //driver
-            .addCase(driverGetRequest, (state, action) => {
-                state.totalCount = 0
-                state.modalShow = false
-                state.validated = false
-            })
-            .addCase(driverGetResponse, (state, action) => {
-                state.totalCount = action.payload?.total_no_of_data
-                state.apply_filter = false
-                state.modalShow = false
-            })
-            .addCase(DriverPostRequest, (state, action) => {
-                state.modalShow = false
-                state.validated = false
-            })
-            .addCase(DriverPostFailure, (state, action) => {
-                state.Err = action.payload
-                state.Toast_Type = "error"
-            })
-            .addCase(ResetDriverFilterData, (state, action) => {
-                state.modalShow = false
-                state.apply_filter_clicked = false
-                state.apply_filter = false
-            })
+            // .addCase(getDashboardResponse, (state, action) => {
+            //     state.totalCount = action.payload?.row_count
+            //     state.apply_filter = false
+            //     state.modalShow = false
+            // })
+
+            // //common 
+            // .addCase(MobileNumVerificationRequest, (state, action) => {
+            //     state.validated = false
+            // })
+            // .addCase(updateCreateModalDetails, (state, action) => {
+            //     state.validated = false
+            //     state.modalShow = true
+            // })
+            // .addCase(updateDeleteDetails, (state, action) => {
+            //     state.modalShow = true
+            // })
+            // .addCase(updateEditDetails, (state, action) => {
+            //     state.modalShow = true
+            // })
+            // .addCase(initializeFilterDetails, (state, action) => {
+            //     state.modalShow = true
+            // })
 
 
-            //buy and sell
-            .addCase(buyAndsellGetRequest, (state, action) => {
-                state.totalCount = 0
-                state.modalShow = false
-                state.validated = false
-            })
-            .addCase(buyAndsellGetResponse, (state, action) => {
-                state.totalCount = action.payload?.total_no_of_data
-                state.apply_filter = false
-                state.modalShow = false
-            })
-            .addCase(buyAndsellPostResponse, (state, action) => {
-                state.modalShow = false
-                state.validated = false
-            })
-            .addCase(buyAndsellPostFailure, (state, action) => {
-                state.Err = action.payload
-                state.Toast_Type = "error"
-            })
-            .addCase(buyAndsellDeleteResponse, (state, action) => {
-                state.modalShow = false
-            })
-            .addCase(buyAndsellDeleteFailure, (state, action) => {
-                state.Err = action.payload
-                state.Toast_Type = "error"
-            })
-            .addCase(ResetbuyAndsellFilterData, (state, action) => {
-                state.modalShow = false
-                state.apply_filter_clicked = false
-                state.apply_filter = false
-            })
-
-            //blog page
-            .addCase(getBlogRequest, (state, action) => {
-                state.totalCount = 0
-            })
-            .addCase(getBlogResponse, (state, action) => {
-                state.totalCount = action.payload?.total_no_of_data
-            })
-
-            .addCase(updateBlogEditData, (state, action) => {
-                state.validated = false
-            })
-            .addCase(updateBlogModalType, (state, action) => {
-                state.modalShow = true
-                state.validated = false
-            })
-            .addCase(updateEditBlog, (state, action) => {
-                state.modalShow = true
-                state.validated = false
-            })
-            .addCase(updateDeleteBlog, (state, action) => {
-                state.modalShow = true
-            })
-            .addCase(updateAddBlogResponse, (state, action) => {
-                state.modalShow = false
-            })
-            .addCase(buyAndsellImageDeleteFailure, (state, action) => {
-                state.Err = action.payload
-                state.Toast_Type = "error"
-            })
-
-            //blog
-            .addCase(blogDeletionResponse, (state, action) => {
-                state.modalShow = false
-            })
-
-            //feedback
-            .addCase(getFeedbackRequest, (state, action) => {
-                state.totalCount = 0
-            })
-            .addCase(getFeedbackFailure, (state, action) => {
-                state.Err = action.payload
-                state.Toast_Type = "error"
-            })
-            .addCase(updateFeedbackModal, (state, action) => {
-                state.modalShow = true
-            })
-
-            .addCase(updateFeedbackStatusResponse, (state, action) => {
-                state.modalShow = false
-            })
-            .addCase(updateFeedbackStatusFailure, (state, action) => {
-                state.Err = action.payload
-                state.Toast_Type = "error"
-            })
-
-            //analytics
-            .addCase(getOverallAnalyticsRequest, (state, action) => {
-                state.modalShow = false
-                state.apply_filter = false
-                state.apply_filter_clicked = false
-            })
-            .addCase(getIndividualAnalyticsRequest, (state, action) => {
-                state.modalShow = false
-                state.apply_filter = false
-                state.apply_filter_clicked = false
-            })
-            .addCase(resetOverallChartFilter, (state, action) => {
-                state.modalShow = false
-                state.apply_filter_clicked = false
-                state.apply_filter = false
-            })
-            .addCase(getIndividualAnalyticsFailure, (state, action) => {
-                state.Err = action.payload
-                state.Toast_Type = "error"
-            })
-            .addCase(getFeedbackResponse, (state, action) => {
-                console.log(action.payload[0])
-                state.totalCount = action.payload[0]?.total_no_of_data
-            })
+            // //load
+            // .addCase(loadGetRequest, (state, action) => {
+            //     state.totalCount = 0
+            //     state.modalShow = false
+            //     state.apply_filter = false
+            // })
+            // .addCase(loadGetResponse, (state, action) => {
+            //     state.totalCount = action.payload?.total_no_of_data
+            // })
+            // .addCase(LoadPostRequest, (state, action) => {
+            //     state.modalShow = false
+            //     state.validated = false
+            // })
+            // .addCase(LoadPostFailure, (state, action) => {
+            //     state.Err = action.payload
+            //     state.Toast_Type = "error"
+            // })
+            // .addCase(LoadDeleteResponse, (state, action) => {
+            //     state.modalShow = false
+            // })
+            // .addCase(LoadDeleteFailure, (state, action) => {
+            //     state.Err = action.payload
+            //     state.Toast_Type = "error"
+            // })
+            // .addCase(ResetLoadFilterData, (state, action) => {
+            //     state.modalShow = false
+            //     state.apply_filter_clicked = false
+            //     state.apply_filter = false
+            // })
 
 
-            //crm dashboard
-            .addCase(getCrmModalRequest, (state, action) => {
-                state.modalShow = true
-            })
-            .addCase(getCrmDashboardRequest, (state, action) => {
-                state.totalCount = 0
-            })
-            .addCase(getCrmDashboardResponse, (state, action) => {
-                state.totalCount = action.payload?.row_count
-            })
-            .addCase(getCrmDashboardFailure, (state, action) => {
-                state.Err = action.payload
-                state.Toast_Type = "error"
-            })
-            .addCase(getCrmModalFailure, (state, action) => {
-                state.Err = action.payload
-                state.Toast_Type = "error"
-            })
-            .addCase(update_crm_status_entry_user_id, (state, action) => {
-                state.modalShow = true
-            })
-            .addCase(updateCrmStatusEntryResponse, (state, action) => {
-                state.modalShow = false
-            })
-            .addCase(updateCrmStatusEntryFailure, (state, action) => {
-                state.Err = action.payload
-                state.Toast_Type = "error"
-            })
 
+            // //truck
+            // .addCase(truckGetRequest, (state, action) => {
+            //     state.totalCount = 0
+            //     state.apply_filter = false
+            //     state.modalShow = false
+            // })
+            // .addCase(truckGetResponse, (state, action) => {
+            //     state.totalCount = action.payload?.total_no_of_data
+            // })
+            // .addCase(TruckPostRequest, (state, action) => {
+            //     state.modalShow = false
+            //     state.validated = false
+            // })
+            // .addCase(TruckPostFailure, (state, action) => {
+            //     state.Err = action.payload
+            //     state.Toast_Type = "error"
+            // })
+            // .addCase(ResetTruckFilterData, (state, action) => {
+            //     state.modalShow = false
+            //     state.apply_filter_clicked = false
+            //     state.apply_filter = false
+            // })
+
+
+            // //driver
+            // .addCase(driverGetRequest, (state, action) => {
+            //     state.totalCount = 0
+            //     state.modalShow = false
+            //     state.validated = false
+            // })
+            // .addCase(driverGetResponse, (state, action) => {
+            //     state.totalCount = action.payload?.total_no_of_data
+            //     state.apply_filter = false
+            //     state.modalShow = false
+            // })
+            // .addCase(DriverPostRequest, (state, action) => {
+            //     state.modalShow = false
+            //     state.validated = false
+            // })
+            // .addCase(DriverPostFailure, (state, action) => {
+            //     state.Err = action.payload
+            //     state.Toast_Type = "error"
+            // })
+            // .addCase(ResetDriverFilterData, (state, action) => {
+            //     state.modalShow = false
+            //     state.apply_filter_clicked = false
+            //     state.apply_filter = false
+            // })
+
+
+            // //buy and sell
+            // .addCase(buyAndsellGetRequest, (state, action) => {
+            //     state.totalCount = 0
+            //     state.modalShow = false
+            //     state.validated = false
+            // })
+            // .addCase(buyAndsellGetResponse, (state, action) => {
+            //     state.totalCount = action.payload?.total_no_of_data
+            //     state.apply_filter = false
+            //     state.modalShow = false
+            // })
+            // .addCase(buyAndsellPostResponse, (state, action) => {
+            //     state.modalShow = false
+            //     state.validated = false
+            // })
+            // .addCase(buyAndsellPostFailure, (state, action) => {
+            //     state.Err = action.payload
+            //     state.Toast_Type = "error"
+            // })
+            // .addCase(buyAndsellDeleteResponse, (state, action) => {
+            //     state.modalShow = false
+            // })
+            // .addCase(buyAndsellDeleteFailure, (state, action) => {
+            //     state.Err = action.payload
+            //     state.Toast_Type = "error"
+            // })
+            // .addCase(ResetbuyAndsellFilterData, (state, action) => {
+            //     state.modalShow = false
+            //     state.apply_filter_clicked = false
+            //     state.apply_filter = false
+            // })
+
+            // //blog page
+            // .addCase(getBlogRequest, (state, action) => {
+            //     state.totalCount = 0
+            // })
+            // .addCase(getBlogResponse, (state, action) => {
+            //     state.totalCount = action.payload?.total_no_of_data
+            // })
+
+            // .addCase(updateBlogEditData, (state, action) => {
+            //     state.validated = false
+            // })
+            // .addCase(updateBlogModalType, (state, action) => {
+            //     state.modalShow = true
+            //     state.validated = false
+            // })
+            // .addCase(updateEditBlog, (state, action) => {
+            //     state.modalShow = true
+            //     state.validated = false
+            // })
+            // .addCase(updateDeleteBlog, (state, action) => {
+            //     state.modalShow = true
+            // })
+            // .addCase(updateAddBlogResponse, (state, action) => {
+            //     state.modalShow = false
+            // })
+            // .addCase(buyAndsellImageDeleteFailure, (state, action) => {
+            //     state.Err = action.payload
+            //     state.Toast_Type = "error"
+            // })
+
+            // //blog
+            // .addCase(blogDeletionResponse, (state, action) => {
+            //     state.modalShow = false
+            // })
+
+            // //feedback
+            // .addCase(getFeedbackRequest, (state, action) => {
+            //     state.totalCount = 0
+            // })
+            // .addCase(getFeedbackFailure, (state, action) => {
+            //     state.Err = action.payload
+            //     state.Toast_Type = "error"
+            // })
+            // .addCase(updateFeedbackModal, (state, action) => {
+            //     state.modalShow = true
+            // })
+
+            // .addCase(updateFeedbackStatusResponse, (state, action) => {
+            //     state.modalShow = false
+            // })
+            // .addCase(updateFeedbackStatusFailure, (state, action) => {
+            //     state.Err = action.payload
+            //     state.Toast_Type = "error"
+            // })
+
+            // //analytics
+            // .addCase(getOverallAnalyticsRequest, (state, action) => {
+            //     state.modalShow = false
+            //     state.apply_filter = false
+            //     state.apply_filter_clicked = false
+            // })
+            // .addCase(getIndividualAnalyticsRequest, (state, action) => {
+            //     state.modalShow = false
+            //     state.apply_filter = false
+            //     state.apply_filter_clicked = false
+            // })
+            // .addCase(resetOverallChartFilter, (state, action) => {
+            //     state.modalShow = false
+            //     state.apply_filter_clicked = false
+            //     state.apply_filter = false
+            // })
+            // .addCase(getIndividualAnalyticsFailure, (state, action) => {
+            //     state.Err = action.payload
+            //     state.Toast_Type = "error"
+            // })
+            // .addCase(getFeedbackResponse, (state, action) => {
+            //     console.log(action.payload[0])
+            //     state.totalCount = action.payload[0]?.total_no_of_data
+            // })
+
+
+            // //crm dashboard
+            // .addCase(getCrmModalRequest, (state, action) => {
+            //     state.modalShow = true
+            // })
+            // .addCase(getCrmDashboardRequest, (state, action) => {
+            //     state.totalCount = 0
+            // })
+            // .addCase(getCrmDashboardResponse, (state, action) => {
+            //     state.totalCount = action.payload?.row_count
+            // })
+            // .addCase(getCrmDashboardFailure, (state, action) => {
+            //     state.Err = action.payload
+            //     state.Toast_Type = "error"
+            // })
+            // .addCase(getCrmModalFailure, (state, action) => {
+            //     state.Err = action.payload
+            //     state.Toast_Type = "error"
+            // })
+            // .addCase(update_crm_status_entry_user_id, (state, action) => {
+            //     state.modalShow = true
+            // })
+            // .addCase(updateCrmStatusEntryResponse, (state, action) => {
+            //     state.modalShow = false
+            // })
+            // .addCase(updateCrmStatusEntryFailure, (state, action) => {
+            //     state.Err = action.payload
+            //     state.Toast_Type = "error"
+            // })
     }
 })
 

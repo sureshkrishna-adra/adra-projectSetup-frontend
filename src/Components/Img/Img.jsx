@@ -9,6 +9,7 @@ const Img = ({
     width,
     height,
     fluid,
+    clickFunction
 }) => {
 
     return (
@@ -19,6 +20,7 @@ const Img = ({
             height={height}
             alt={alt}
             fluid={fluid}
+            onClick={clickFunction}
         />
     )
 }

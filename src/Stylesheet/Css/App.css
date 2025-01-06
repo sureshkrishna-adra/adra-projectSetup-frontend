@@ -26,7 +26,7 @@
   --btn-brand-outerLayer-border-color: black;
   --btn-brand-outerLayer-color: black;
 
-  --header-height: 9rem;
+  --header-height: 5rem;
   --header-padding-y: 0rem 0;
   --header-title-body-bg: #042126;
   --header-body-bg: #FFF;
@@ -36,7 +36,7 @@
   --home-main-content-bg: #F1F1FF;
   --home-main-content-padding: 3rem 0 3rem 0;
 
-  --main-background-color: #EBF1FF;
+  --main-background-color: #f9f9f9;
   --main-content-padding-y: .7rem 0rem .4rem 0rem;
 
   --page-main-content-padding-y: 1rem .2rem;
@@ -44,6 +44,7 @@
   --main-body-height: 88vh;
 
   --section-one-bg: #2ABC2A;
+  --registration-form-height: 40rem;
 }
 
 .btn-brand-outerLayer-color {

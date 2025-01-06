@@ -12,12 +12,15 @@ const Login = () => {
               <div className="card-body p-3 p-md-4 p-xl-5 py-5">
                 <div className="text-center mb-3">
                   <Img
-                    // src={Image.CompanyLogo}
+                    src={Image.CompanyLogo}
                     alt="modelrocket-logo"
-                    width="60%"
-                    height="60%"
+                    width="90rem"
+                    height="60rem"
                   /> 
+
+                  <p>Adra Product Studio</p>
                 </div>
+                
                 <LoginForm />
               </div>
             </div>

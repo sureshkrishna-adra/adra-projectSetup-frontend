@@ -3,6 +3,7 @@ import { useDispatch } from 'ResuableFunctions/CustomHooks';
 import ShortUniqueId from 'short-unique-id';
 import store from 'StoreIndex';
 import { useSelector } from 'react-redux';
+import { handleInterviewRegistrationOnChange } from 'Views/InterviewCandidates/Action/interviewAction';
 
 const readFile = (file) => {
     return new Promise((resolve, reject) => {
@@ -44,7 +45,7 @@ const JsonData = () => {
     //main selectors
     const dispatch = useDispatch();
     const state = store.getState();
-    const { dashboardState, servicesState, blogState, commonState, feedbackState, analyticsState, crmState } = useSelector((state) => state);
+    const { interviewState, commonState } = useSelector((state) => state);
 
     const jsonOnly = {
         sidebarMenus: [
@@ -141,95 +142,6 @@ const JsonData = () => {
                 in: 5
             }
         ],
-        services: [
-            "All",
-            "Lorry Owner",
-            "Logistics",
-            "Lorry Constructions",
-            "Load Booking Agent",
-            "Driver",
-            "Lorry Buy & Sell Dealers/Owner",
-            "Fastag",
-            "Insurance"
-        ],
-        blogLanguages: [
-            "Tamil",
-            "English",
-            "Hindi"
-        ],
-        truckBodyType: [
-            "LCV",
-            "Container",
-            "Open body",
-            "Tanker",
-            "Trailer",
-            "Tipper",
-            "Bus "
-        ],
-        noOfTyres: [
-            "4",
-            "6",
-            "10",
-            "12",
-            "14",
-            "16",
-            "18",
-            "20",
-            "22"
-        ],
-        tonnage: [
-            '1 Ton - 2.5 Ton',
-            '2.5 Ton - 5 Ton',
-            '5 Ton - 10 Ton',
-            '10 Ton - 20 Ton',
-            '20 Ton - 40 Ton',
-            'Above 40 Ton'
-        ],
-        truckBrand: [
-            "Ashok Leyland",
-            "Tata",
-            "Mahindra",
-            "Eicher",
-            "Daimler India",
-            "Bharat Benz",
-            "Maruthi Suzuki",
-            "SML Lsuzu",
-            "Force",
-            "AMW",
-            "Man",
-            "Scania",
-            "Volvo",
-            "Others",
-        ],
-        filterKilometers: [
-            '(0 - 10,000)',
-            '(10,001 - 30,000)',
-            '(30,001 - 50,000)',
-            '(50,001 - 70,000)',
-            '(70,001 - 100,000)',
-            '(100,001 - 150,000)',
-            '(150,001 - 200,000)',
-            '(200,001 - 300,000)',
-            '(300,001 - 500,000)',
-            '(500,001 - 700,000)',
-            '(700,001 - 1,000,000)',
-            '(1,000,001 - 1,500,000)',
-            '(1,500,001 - 2,000,000)',
-            '(2,000,001+ kms)'
-        ],
-        filterPrice: [
-            '(0 - 5,00,000)',
-            '(5,00,001 - 10,00,000)',
-            '(10,00,001 - 20,00,000)',
-            '(20,00,001 - 30,00,000)',
-            '(30,00,001 - 40,00,000)',
-            '(40,00,001 - 50,00,000)',
-            '(50,00,001 - 60,00,000)',
-            '(60,00,001 - 70,00,000)',
-            '(70,00,001 - 80,00,000)',
-            '(80,00,001 - 90,00,000)',
-            '(90,00,001 and above)'
-        ],
         states: [
             { value: 1, label: 'Andaman and Nicobar Islands' },
             { value: 2, label: 'Andhra Pradesh' },
@@ -265,183 +177,421 @@ const JsonData = () => {
             { value: 32, label: 'Uttarakhand' },
             { value: 33, label: 'West Bengal' }
         ],
-        overallAnalysis: [
-            { value: 1, label: 'today' },
-            { value: 2, label: 'last 7 days' },
-            { value: 3, label: 'this month' }
+        gender: [
+            "Male",
+            "Female"
         ],
-        crm_status_options: [
-            "HOT",
-            "WARM",
-            "COLD"
+        maritalStatus: [
+            "Married",
+            "Un Married"
         ],
-        analatics_load_table_head: [
-            "Date",
-            "Phone number",
-            "Name",
-            "Company name",
-            "From",
-            "To",
-            "Material"
+        canditateRole: [
+            "Front-End-Developer",
+            "MERN-Stack-Developer"
         ],
-        analatics_truck_table_head: [
-            "Date",
-            "Phone number",
-            "Name",
-            "Company name",
-            "From",
-            "To",
-            "Vehicle number"
-        ],
-        analatics_driver_table_head: [
-            "Date",
-            "Phone number",
-            "Name",
-            "Company name",
-            "From",
-            "To",
-            "Vehicle number"
-        ],
-        analatics_buy_sell_table_head: [
-            "Date",
-            "Phone number",
-            "Name",
-            "Kms driven",
-            "location",
-            "Owner name",
-            "Vehicle number",
-            "Price"
+        yearOfExp: [
+            "0 to 6 Months",
+            "6 Months & Above"
         ]
     }
 
     const jsxJson = {
-        //header title 
-        headerTitleLink: [
+        //                                                              candidate registration form                                                                  //
+        candidateRegistration: [
+            //                                                                       Candidate details                                                               //
             {
-                link: "",
-                title: "Facebook",
-                icon: Icons.facebookIcon
+                category: "heading",
+                title: "Candidate details",
+                divClassName: 'col-12 p-1 mt-2',
             },
             {
-                link: "",
-                title: "twitter",
-                icon: Icons.twitterIcon
+                name: "Full Name",
+                type: "text",
+                category: "input",
+                placeholder: "",
+                divClassName: 'col-12 col-md-6 col-lg-4 p-1 mt-2',
+                value: interviewState?.candidateData?.name || '',
+                change: (e) => dispatch(handleInterviewRegistrationOnChange({ name: e.target.value })),
+                isMandatory: true,
+                Err: commonState?.validated && !interviewState?.candidateData?.name ? "Full Name required" : null
             },
             {
-                link: "",
-                title: "LinkedIn",
-                icon: Icons.linkedinIcon
-            }
+                name: "Age",
+                type: "text",
+                category: "input",
+                placeholder: "",
+                divClassName: 'col-12 col-md-6 col-lg-4 p-1 mt-2',
+                value: interviewState?.candidateData?.age || '',
+                change: (e) => {
+                    if (/^\d*$/.test(e.target.value)) {
+                        console.log("/^\d*$/.test(e.target.value)")
+                        dispatch(handleInterviewRegistrationOnChange({ age: e.target.value }))
+                    }
+                },
+                isMandatory: true,
+                Err: commonState?.validated && !interviewState?.candidateData?.age ? "Age required" : null
+            },
+            {
+                name: "Phone Number",
+                type: "text",
+                category: "input",
+                placeholder: "",
+                value: interviewState?.candidateData?.phoneNumber || '',
+                divClassName: 'col-12 col-md-6 col-lg-4 p-1 mt-2',
+                change: (e) => {
+                    if (/^\d*$/.test(e.target.value)) {
+                        dispatch(handleInterviewRegistrationOnChange({ phoneNumber: e.target.value }))
+                    }
+                },
+                isMandatory: true,
+                Err: commonState?.validated && !interviewState?.candidateData?.phoneNumber ? "Phone number required" : null
+            },
+            {
+                name: "Email",
+                type: "email",
+                category: "input",
+                placeholder: "",
+                value: interviewState?.candidateData?.email || '',
+                divClassName: 'col-12 col-md-6 col-lg-4 p-1 mt-2',
+                change: (e) => dispatch(handleInterviewRegistrationOnChange({ email: e.target.value })),
+                isMandatory: true,
+                Err: commonState?.validated && !interviewState?.candidateData?.email ? "Email required" : null
+            },
+            {
+                name: "Gender",
+                type: "normal_select",
+                category: "select",
+                placeholder: "",
+                value: interviewState?.candidateData?.gender || '',
+                divClassName: 'col-12 col-md-6 col-lg-4 p-1 mt-2',
+                options: jsonOnly.gender,
+                change: (e) => dispatch(handleInterviewRegistrationOnChange({ gender: e.target.value })),
+                Err: commonState?.validated && !interviewState?.candidateData?.gender ? "Gender required" : null,
+                isMandatory: true
+            },
+            {
+                name: "Address",
+                type: "textbox",
+                category: "textbox",
+                placeholder: "",
+                value: interviewState?.candidateData?.address || '',
+                divClassName: 'col-12 p-1 mt-2',
+                change: (e) => dispatch(handleInterviewRegistrationOnChange({ address: e.target.value })),
+                Err: commonState?.validated && !interviewState?.candidateData?.address ? "Address required" : null,
+                isMandatory: true
+            },
+
+            //                                                                      Family details                                                                 //
+            {
+                category: "heading",
+                title: "Family details",
+                divClassName: 'col-12 p-1 mt-2',
+            },
+            {
+                name: "Parent / Husband name",
+                type: "text",
+                category: "input",
+                placeholder: "",
+                value: interviewState?.candidateData?.parentName || '',
+                divClassName: 'col-12 col-md-6 col-lg-4 p-1 mt-2',
+                change: (e) => dispatch(handleInterviewRegistrationOnChange({ parentName: e.target.value })),
+                isMandatory: true,
+                Err: commonState?.validated && !interviewState?.candidateData?.parentName ? "Parent / Husband name required" : null
+            },
+            {
+                name: "Parent / Husband occupation",
+                type: "text",
+                category: "input",
+                placeholder: "",
+                value: interviewState?.candidateData?.parentOccupation || '',
+                divClassName: 'col-12 col-md-6 col-lg-4 p-1 mt-2',
+                change: (e) => dispatch(handleInterviewRegistrationOnChange({ parentOccupation: e.target.value })),
+                isMandatory: true,
+                Err: commonState?.validated && !interviewState?.candidateData?.parentOccupation ? "Parent / Husband occupation required" : null
+            },
+            {
+                name: "Marital status",
+                type: "normal_select",
+                category: "select",
+                placeholder: "",
+                value: interviewState?.candidateData?.maritalStatus || '',
+                divClassName: 'col-12 col-md-6 col-lg-4 p-1 mt-2',
+                options: jsonOnly?.maritalStatus,
+                change: (e) => dispatch(handleInterviewRegistrationOnChange({ maritalStatus: e.target.value })),
+                Err: commonState?.validated && !interviewState?.candidateData?.maritalStatus ? "Marital status required" : null,
+                isMandatory: true
+            },
+            {
+                name: "Childrens",
+                type: "text",
+                category: "input",
+                placeholder: "",
+                value: interviewState?.candidateData?.childrens || '',
+                divClassName: `col-12 col-md-6 col-lg-4 p-1 mt-2 ${interviewState?.candidateData?.maritalStatus ? interviewState?.candidateData?.maritalStatus === "Married" ? "" : "d-none" : "d-none"}`,
+                change: (e) => {
+                    // if (/^\d*$/.test(e.target.value)) {
+                    dispatch(handleInterviewRegistrationOnChange({ childrens: e.target.value }))
+                    // }
+                },
+                isMandatory: true,
+                Err: commonState?.validated && !interviewState?.candidateData?.childrens ? "Childrens required" : null
+            },
+            {
+                name: "Brother / Sister name",
+                type: "text",
+                category: "input",
+                placeholder: "",
+                value: interviewState?.candidateData?.siblings || '',
+                divClassName: 'col-12 col-md-6 col-lg-4 p-1 mt-2',
+                change: (e) => dispatch(handleInterviewRegistrationOnChange({ siblings: e.target.value })),
+                isMandatory: true,
+                Err: commonState?.validated && !interviewState?.candidateData?.name ? "Brother / Sister name required" : null
+            },
+            {
+                name: "Address (Cbe if Any)",
+                type: "text",
+                category: "input",
+                placeholder: "",
+                value: interviewState?.candidateData?.addressIfAnyCbe || '',
+                divClassName: 'col-12 col-md-6 col-lg-4 p-1 mt-2',
+                change: (e) => dispatch(handleInterviewRegistrationOnChange({ addressIfAnyCbe: e.target.value })),
+                isMandatory: true,
+                Err: commonState?.validated && !interviewState?.candidateData?.addressIfAnyCbe ? "Address (Cbe if Any) required" : null
+            },
+
+            //                                                                Academics & Education                                                                //
+            {
+                category: "heading",
+                title: "Academics & Education",
+                divClassName: 'col-12 p-1 mt-2',
+            },
+            {
+                name: "SSLC",
+                sub_heading: "school/college",
+                type: "text",
+                category: "input",
+                placeholder: "",
+                value: interviewState?.candidateData?.sslcSchoolName || '',
+                divClassName: 'col-6 p-1 mt-2',
+                change: (e) => dispatch(handleInterviewRegistrationOnChange({ sslcSchoolName: e.target.value })),
+                isMandatory: true,
+                Err: commonState?.validated && !interviewState?.candidateData?.name ? "School Name required" : null
+            },
+            {
+                name: "Marks/Percentage",
+                type: "text",
+                category: "input",
+                placeholder: "",
+                value: interviewState?.candidateData?.sslcMarks || '',
+                divClassName: 'col-6 p-1 mt-2',
+                change: (e) => {
+                    if (/^\d*$/.test(e.target.value)) {
+                        dispatch(handleInterviewRegistrationOnChange({ sslcMarks: e.target.value }))
+                    }
+                },
+                isMandatory: true,
+                Err: commonState?.validated && !interviewState?.candidateData?.sslcMarks ? "Marks/Percentage required" : null
+            },
+            {
+                name: "HSC",
+                sub_heading: "school/college",
+                type: "text",
+                category: "input",
+                placeholder: "",
+                value: interviewState?.candidateData?.hscSchoolName || '',
+                divClassName: 'col-6 p-1 mt-2',
+                change: (e) => dispatch(handleInterviewRegistrationOnChange({ hscSchoolName: e.target.value })),
+                isMandatory: true,
+                Err: commonState?.validated && !interviewState?.candidateData?.hscSchoolName ? "School Name required" : null
+            },
+            {
+                name: "Marks/Percentage",
+                type: "text",
+                category: "input",
+                placeholder: "",
+                value: interviewState?.candidateData?.hscMarks || '',
+                divClassName: 'col-6 p-1 mt-2',
+                change: (e) => {
+                    if (/^\d*$/.test(e.target.value)) {
+                        dispatch(handleInterviewRegistrationOnChange({ hscMarks: e.target.value }))
+                    }
+                },
+                isMandatory: true,
+                Err: commonState?.validated && !interviewState?.candidateData?.hscMarks ? "Marks/Percentage required" : null
+            },
+            {
+                name: "College",
+                type: "text",
+                category: "input",
+                placeholder: "",
+                value: interviewState?.candidateData?.collegeName || '',
+                divClassName: 'col-6 p-1 mt-2',
+                change: (e) => dispatch(handleInterviewRegistrationOnChange({ collegeName: e.target.value })),
+                isMandatory: true,
+                Err: commonState?.validated && !interviewState?.candidateData?.collegeName ? "College Name required" : null
+            },
+            {
+                name: "CGPA/Percentage",
+                type: "text",
+                category: "input",
+                placeholder: "",
+                value: interviewState?.candidateData?.collegeMarks || '',
+                divClassName: 'col-6 p-1 mt-2',
+                change: (e) => {
+                    if (/^\d*$/.test(e.target.value)) {
+                        dispatch(handleInterviewRegistrationOnChange({ collegeMarks: e.target.value }))
+                    }
+                },
+                isMandatory: true,
+                Err: commonState?.validated && !interviewState?.candidateData?.collegeMarks ? "Marks/Percentage required" : null
+            },
+
+            //                                                                Fresher or Experienced                                                              //
+            {
+                category: "heading",
+                title: "Fresher / Experience",
+                divClassName: 'col-12 p-1 mt-2',
+            },
+            {
+                name: "Fresher",
+                type: "radio",
+                category: "Checkbox",
+                placeholder: "",
+                value: "fresher",
+                divClassName: 'col-6 col-md-4 col-lg-2 col-xl-1 p-1 mt-2',
+                change: (e) => dispatch(handleInterviewRegistrationOnChange({ experience: e.target.value })),
+                isMandatory: true,
+                Err: commonState?.validated && !interviewState?.candidateData?.experience ? "Experience type required" : null
+            },
+            {
+                name: "Experienced",
+                type: "radio",
+                category: "Checkbox",
+                placeholder: "",
+                value: "experienced",
+                divClassName: 'col-6 col-md-4 col-lg-2 col-xl-1 p-1 mt-2',
+                change: (e) => dispatch(handleInterviewRegistrationOnChange({ experience: e.target.value })),
+                isMandatory: true,
+                Err: commonState?.validated && !interviewState?.candidateData?.experience ? "Experience type required" : null
+            },
+
+
+            //                                                                       Role                                                                         //
+            {
+                category: "heading",
+                title: "Role",
+                divClassName: 'col-12 p-1 mt-2',
+            },
+            {
+                type: "normal_select",
+                category: "select",
+                placeholder: "",
+                value: interviewState?.candidateData?.canditateRole || '',
+                options: jsonOnly?.canditateRole,
+                divClassName: 'col-12 col-md-8 col-lg-4 col-xl-3 p-1 mt-2',
+                change: (e) => dispatch(handleInterviewRegistrationOnChange({ canditateRole: e.target.value })),
+                isMandatory: true,
+                Err: commonState?.validated && !interviewState?.candidateData?.canditateRole ? "Experience type required" : null
+            },
+
+            //                                                                  Work Experience                                                                   //
+            {
+                category: "heading",
+                title: "Work Experience",
+                divClassName: `col-12 p-1 mt-2 ${interviewState?.candidateData?.experience !== "experienced" ? "d-none" : ""}`,
+            },
+            {
+                name: "Organization name",
+                type: "text",
+                category: "input",
+                placeholder: "",
+                value: interviewState?.candidateData?.previousCompanyName || '',
+                divClassName: `col-12 col-md-8 col-lg-4 p-1 mt-2 ${interviewState?.candidateData?.experience !== "experienced" ? "d-none" : ""}`,
+                change: (e) => dispatch(handleInterviewRegistrationOnChange({ previousCompanyName: e.target.value })),
+                isMandatory: true,
+                Err: commonState?.validated && !interviewState?.candidateData?.previousCompanyName ? "Organization name required" : null
+            },
+            {
+                name: "Desigination",
+                type: "text",
+                category: "input",
+                placeholder: "",
+                value: interviewState?.candidateData?.designation || '',
+                divClassName: `col-12 col-md-8 col-lg-4 p-1 mt-2 ${interviewState?.candidateData?.experience !== "experienced" ? "d-none" : ""}`,
+                change: (e) => dispatch(handleInterviewRegistrationOnChange({ designation: e.target.value })),
+                isMandatory: true,
+                Err: commonState?.validated && !interviewState?.candidateData?.designation ? "Organization name required" : null
+            },
+            {
+                name: "Years of Experience",
+                type: "normal_select",
+                category: "select",
+                placeholder: "",
+                value: interviewState?.candidateData?.canditateExpType || '',
+                options: jsonOnly?.yearOfExp,
+                divClassName: `col-12 col-md-8 col-lg-4 p-1 mt-2 ${interviewState?.candidateData?.experience !== "experienced" ? "d-none" : ""}`,
+                change: (e) => dispatch(handleInterviewRegistrationOnChange({ canditateExpType: e.target.value })),
+                isMandatory: true,
+                Err: commonState?.validated && !interviewState?.candidateData?.canditateExpType ? "Years of Experience required" : null
+            },
+
+
+            //                                                             Expected Salary (if any)                                                              //
+            {
+                category: "heading",
+                title: "Expected Salary (if any)",
+                divClassName: 'col-12 p-1 mt-2',
+            },
+            {
+                name: "Present Salary if applicable",
+                type: "text",
+                category: "input",
+                placeholder: "",
+                value: interviewState?.candidateData?.currentSalary || '',
+                divClassName: 'col-12 col-md-8 col-lg-4 p-1 mt-2',
+                change: (e) => {
+                    if (/^\d*$/.test(e.target.value)) {
+                        dispatch(handleInterviewRegistrationOnChange({ currentSalary: e.target.value }))
+                    }
+                },
+                isMandatory: true,
+                Err: commonState?.validated && !interviewState?.candidateData?.currentSalary ? "Present Salary required" : null
+            },
+            {
+                name: "Expected Salary",
+                type: "text",
+                category: "input",
+                placeholder: "",
+                value: interviewState?.candidateData?.expectedSalary || '',
+                divClassName: 'col-12 col-md-8 col-lg-4 p-1 mt-2',
+                change: (e) => {
+                    if (/^\d*$/.test(e.target.value)) {
+                        dispatch(handleInterviewRegistrationOnChange({ expectedSalary: e.target.value }))
+                    }
+                },
+                isMandatory: true,
+                Err: commonState?.validated && !interviewState?.candidateData?.expectedSalary ? "Expected Salary required" : null
+            },
+
+            //                                                                      Remarks                                                                      //
+            {
+                category: "heading",
+                title: "Remarks and Questions if any",
+                divClassName: 'col-12 p-1 mt-2',
+            },
+            {
+                name: "Write here",
+                type: "textbox",
+                category: "textbox",
+                placeholder: "",
+                value: interviewState?.candidateData?.remarks || '',
+                divClassName: 'col-12 p-1 mt-2',
+                change: (e) => dispatch(handleInterviewRegistrationOnChange({ remarks: e.target.value })),
+                Err: commonState?.validated && !interviewState?.candidateData?.remarks ? "Remarks required" : null,
+                isMandatory: false
+            },
+
         ],
-        headerMenuLink: [
-            {
-                link: "",
-                title: "About",
-                icon: Icons.header_title_arrow_black,
-                type:"link"
-            },
-            {
-                link: "",
-                title: "Models",
-                icon: Icons.header_title_arrow_black,
-                type:"link"
-            },
-            {
-                link: "",
-                title: "Blog",
-                icon: Icons.header_title_arrow_black,
-                type:"link"
-            },
-            {
-                link: "",
-                title: "Contact Us", 
-                type:"button"
-            }
-        ],
-        //                                                              blog                                                                  //
-        // blogInputs: [
-        //     {
-        //         name: "Language",
-        //         type: "select",
-        //         category: "select",
-        //         placeholder: "",
-        //         value: blogState?.blog_edit_data?.language,
-        //         options: jsonOnly.blogLanguages,
-        //         change: (e) => dispatch(handleBlogInputOnChange({ language: e.target.value })),
-        //         isMandatory: true,
-        //         error: commonState?.validated && !blogState?.blog_edit_data?.language ? "Language required" : null
-        //     },
-        //     {
-        //         name: "Catergory",
-        //         type: "select",
-        //         category: "select",
-        //         placeholder: "",
-        //         value: blogState?.blog_edit_data?.category,
-        //         options: jsonOnly.services,
-        //         change: (e) => dispatch(handleBlogInputOnChange({ category: e.target.value })),
-        //         error: commonState?.validated && !blogState?.blog_edit_data?.category ? "Category required" : null,
-        //         isMandatory: true
-        //     },
-        //     {
-        //         name: "Heading",
-        //         type: "text",
-        //         category: "input",
-        //         placeholder: "",
-        //         value: blogState?.blog_edit_data?.heading1,
-        //         change: (e) => dispatch(handleBlogInputOnChange({ heading1: e.target.value })),
-        //         error: commonState?.validated && !blogState?.blog_edit_data?.heading1 ? "Heading required" : null,
-        //         isMandatory: true
-        //     },
-        //     {
-        //         name: "Sub Heading",
-        //         type: "text",
-        //         category: "input",
-        //         placeholder: "",
-        //         value: blogState?.blog_edit_data?.heading2,
-        //         change: (e) => dispatch(handleBlogInputOnChange({ heading2: e.target.value })),
-        //         error: commonState?.validated && !blogState?.blog_edit_data?.heading2 ? "Sub-Heading required" : null,
-        //         isMandatory: true
-        //     },
-        //     {
-        //         name: "Description",
-        //         type: "textbox",
-        //         category: "textbox",
-        //         placeholder: "",
-        //         value: blogState?.blog_edit_data?.blog_content,
-        //         change: (e) => dispatch(handleBlogInputOnChange({ blog_content: e.target.value })),
-        //         error: commonState?.validated && !blogState?.blog_edit_data?.blog_content ? "Blog content required" : null,
-        //         isMandatory: true
-        //     },
-        //     {
-        //         name: "Upload image",
-        //         type: "file",
-        //         category: "input",
-        //         placeholder: "",
-        //         value: blogState?.blog_edit_data?.blog_image_show_ui || [],
-        //         change: (e) => {
-        //             // -- For Multiple File Input
-        //             let myImages = state?.blogState?.blog_edit_data?.blog_image_show_ui;
-        //             let makeImagesList = [];
-
-        //             // Use `Promise.all` to handle async file reading
-        //             Promise.all(
-        //                 Array.from(e.target.files).map((file) => readFile(file))
-        //             )
-        //                 .then((results) => {
-        //                     makeImagesList = results;
-        //                     if (myImages) {
-        //                         makeImagesList = [...myImages, ...makeImagesList];
-        //                     }
-        //                     dispatch(handleBlogInputOnChange({ blog_image_show_ui: makeImagesList, blog_image_send_api: e.target.files }))
-        //                 })
-        //                 .catch((error) => console.error('Error reading files:', error));
-
-
-        //         },
-        //         error: commonState?.validated && !blogState?.blog_edit_data?.blog_image_show_ui ? "Blog Image required" : null,
-        //         isMandatory: true
-        //     }
-        // ],
 
         //                                                              load                                                                  //
         // loadAddEditInputs: [

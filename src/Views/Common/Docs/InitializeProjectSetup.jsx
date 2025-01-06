@@ -19,7 +19,7 @@ export const InitializeProjectSetup = () => {
         var en = encryptData("uyhagsd")
         var de = decryptData(en)
 
-        console.log(en,de)        
+        // console.log(en,de)        
         // dispatch(handleBearerToken(Cookies.get("token")))
     }, [])
 

@@ -5,8 +5,10 @@ import { ToastContainer } from "react-toastify";
 
 import Login from "Views/Common/Docs/Login";
 import Error from "Views/Common/Docs/error";
-import Home from "Views/Main/Docs/Home";
 import { InitializeProjectSetup } from "Views/Common/Docs/InitializeProjectSetup";
+import InterviewCandidatesHeader from "Components/Panel_compnent/InterviewCandidatesHeader";
+import InterviewCandidatesIndex from "Views/InterviewCandidates/Docs/InterviewCandidatesIndex";
+import InterviewCandidatesRegistration from "Views/InterviewCandidates/Docs/InterviewCandidatesRegistration";
 
 
 const App = () => {
@@ -16,8 +18,12 @@ const App = () => {
       <ToastContainer theme='light' />
       <Routes>
         <Route element={<InitializeProjectSetup />}>
-          <Route path="/" element={<Login />}>
-            <Route index element={<Home />} />
+          <Route path="/" element={<Login />} />
+          <Route path="candidates_registration" element={<InterviewCandidatesRegistration />} />
+
+          {/* interview candidates Views */}
+          <Route path="/interview_candidate" element={<InterviewCandidatesHeader />}>
+            <Route index element={<InterviewCandidatesIndex />} />
           </Route>
 
           <Route path="*" element={<Error />} />

@@ -10,7 +10,7 @@ import ModalComponent from "Components/Modal/Modal";
 import SpinnerComponent from "Components/Spinner/Spinner";
 import { Fragment } from "react";
 import { useSelector } from "react-redux";
-import { updateApplyFilterClickedTrue, updateModalShow } from "Views/Common/Slice/Common_slice"; 
+import { updateApplyFilterClickedTrue, updateModalShow } from "Views/Common/Slice/Common_slice";
 import Icons from "Utils/Icons";
 import JsonData from "Utils/JsonData";
 

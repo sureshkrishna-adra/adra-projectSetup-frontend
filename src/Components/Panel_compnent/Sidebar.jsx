@@ -1,14 +1,9 @@
-import React, { Fragment, useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux';
-
-import { handleCurrentMenuInd } from 'Views/Common/Action/Common_action';
-import Icons from 'Utils/Icons';
-import Image from 'Utils/Image';
-import OffCanvas from 'Components/Offcanvas/OffCanvas';
-import { CustomUseLocationHook, useCustomNavigate } from 'ResuableFunctions/CustomHooks';
-import Img from 'Components/Img/Img';
-import NavLinkComp from 'Components/Router_components/NavLink';
-
+import React from 'react'
+import Img from 'components/Img/Img';
+import NavLinkComp from 'components/Nav/NavLink';
+import OffCanvas from 'components/Offcanvas/OffCanvas';
+import ButtonComponent from 'components/Button/Button';
+import { CiLogout } from "react-icons/ci";
 
 const Sidebar = ({
     menuOptions,
@@ -21,24 +16,7 @@ const Sidebar = ({
 
     footer,
     footerClickFunction
-}) => { 
-    const dispatch = useDispatch();
-    const navigate = useCustomNavigate();
-    const location = CustomUseLocationHook();
-
-    useEffect(() => {
-        dispatch(handleCurrentMenuInd(menuOptions, location[location.length - 1]))
-
-        if(window.location.pathname === "/dashboard" || window.location.pathname === "/dashboard/"){
-            navigate("/dashboard/home")
-          }
-    }, [])
-
-    const handleDynamicTab = () => {
-        const a = window.location.pathname.split('/')
-        const b = a[a.length - 1]
-        dispatch(handleCurrentMenuInd(menuOptions, b))
-    }
+}) => {
 
     const hanldeButton = (v) => {
         return <>
@@ -60,48 +38,60 @@ const Sidebar = ({
         />
     }
 
-    const bodyContent = () => {
-        return <nav className='navmenu w-100 pe-3'>
-            <ul className='w-100 px-1 '>
-                {menuOptions.map((v, i) => (
-                    v.type === "link" ?
-                        <li className="list-unstyled w-100" key={i} onClick={handleDynamicTab}>
-                            <NavLinkComp
-                                componentFrom="sidebar menus"
-                                className='navlink-sidebar'
-                                title={hanldeButton(v)}
-                                to={v.route} 
-                            />
-                        </li>
-                        :
-                        <li className="list-unstyled w-100" key={i} onClick={handleDynamicTab}>
-                            <NavLinkComp
-                                componentFrom="sidebar menus"
-                                className=' w-100 d-flex flex-wrap align-items-center mb-1 navlink-sidebar rounded px-2 py-2 text-decoration-none pe-none'
-                                title={hanldeButton(v)}
-                                to={v.route}
-                            />
+    
 
-                            <ul className='h-100 w-100 px-1 ms-4'>
-                                {
-                                    v?.options.map((v, i) => (
-                                        <li className="list-unstyled w-100 " key={i} onClick={handleDynamicTab}>
-                                            <NavLinkComp
-                                                componentFrom="sidebar menus"
-                                                className=' w-100 d-flex flex-wrap align-items-center mb-1 navlink-sidebar rounded px-2 py-2 text-decoration-none'
-                                                title={hanldeButton(v)}
-                                                to={v.route} 
-                                            />
-                                        </li>
-                                    ))
-                                }
-                            </ul>
-                        </li>
-                ))}
-            </ul>
-        </nav >
+    const bodyContent = () => {
+        return menuOptions.map((v, i) => (
+            <React.Fragment key={i}>
+                <NavLinkComp
+                    componentFrom="sidebar menus"
+                    className='w-100 btn-dark d-flex flex-wrap align-items-center mb-2 navlink-sidebar rounded p-2 text-decoration-none text-secondary'
+                    title={hanldeButton(v)}
+                    to={v.route}
+                />
+            </React.Fragment>
+        ))
+    }
+    const bodyFun = (ifOffcanvas) => {
+        return ifOffcanvas ?
+            <div className="row justify-content-center">
+                <div className="col-11">
+                    {bodyContent()}
+                </div>
+            </div>
+            :
+            bodyContent()
     }
 
+
+
+
+    const footerContent = (type) => {
+        return <div className="sidebar-footer">
+            <div className={`row h-100 ${type === "offcanvas" ? "align-items-center" : "align-items-end"}`}>
+                <ButtonComponent
+                    componentFrom="sidebar menus"
+                    className={`w-100 border-dark sign-out-button text-dark d-flex flex-wrap align-items-end mb-2 rounded p-2`}
+                    title={"log"}
+                    buttonName={hanldeButton({
+                        icon: <CiLogout className='fs-4' />,
+                        name: "Log out"
+                    })}
+                    clickFunction={footerClickFunction}
+                />
+            </div>
+        </div>
+    }
+    const footerFun = (ifOffcanvas) => {
+        return ifOffcanvas ?
+            <div className="row justify-content-center">
+                <div className="col-10 ">
+                    {footerContent("offcanvas")}
+                </div>
+            </div>
+            :
+            footerContent("sidebar")
+    }
 
     return (
         <>
@@ -111,48 +101,50 @@ const Sidebar = ({
                     {
                         header ?
                             <>
-                                <div className="sidebar-header position-relative">
-                                    <div className="row h-100 align-items-center justify-content-center sidebar-header-underline">
+                                <div className="sidebar-header">
+                                    <div className="row h-100 align-items-center justify-content-center">
                                         <div className="col text-center">
-                                            {headerFun('198px', '30px', companyLogo)}
+                                            {headerFun('33%', '50px', companyLogo)}
                                         </div>
                                     </div>
                                 </div>
+                                <hr className=''/>
                             </>
                             :
                             null
                     }
 
+
+
                     {/* body */}
-                    <div className="sidebar-body">
-                        {bodyContent()}
+                    <div className={footer ? "sidebar-body-with-footer" : "sidebar-body-without-footer"}>
+                        {bodyFun()}
                     </div>
-                </div>
 
-                <div className="sidebarCircleOne">
-                    <Img src={Image.circleImageOne} width={"90%"} height={"90%"} />
-                </div>
 
-                <div className="sidebarCircleTwo">
-                    <Img src={Image.circleImageTwo} width={"90%"} height={"90%"} />
-                </div>
-
-                <div className="sidebarCircleThree">
-                    <Img src={Image.circleImageThree} width={"90%"} height={"90%"} />
+                    {/* footer */}
+                    {
+                        footer ?
+                            footerFun()
+                            :
+                            null
+                    }
                 </div>
             </div>
+
 
 
             <OffCanvas
                 offCanvasShow={offCanvasShow}
                 offcanvasPlacement="start"
-                offcanvasClassname="rounded border-0 sidebar offcanvas-sidebar"
+                offcanvasClassname="rounded border-0"
                 handleCanvasOpenOrClose={handleCanvasOpenOrClose}
-                canvasHeader={headerFun('198px', '33px', companyLogo)}
-                offcanvasHeaderClassname="sidebar-header"
-                offcanvasHeaderTitleClassname="col-11 text-center"
-                offcanvasBodyClassname="sidebar-body-without-footer"
-                canvasBody={bodyContent()}
+                canvasHeader={headerFun('24%', '45px', companyLogo)}
+                offcanvasHeaderClassname="sidebar-header ms-5"
+                offcanvasHeaderTitleClassname="col-11"
+                offcanvasBodyClassname={footer ? "sidebar-body-with-footer py-3" : "sidebar-body-without-footer"}
+                canvasBody={bodyFun("offcanvas")}
+                // canvasFooter={footerFun("offcanvas")}
             />
         </>
     )

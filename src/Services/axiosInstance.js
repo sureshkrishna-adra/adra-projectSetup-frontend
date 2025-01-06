@@ -4,7 +4,7 @@ import { handlerefreshToken } from "Views/Common/Action/Common_action";
 
 
 const axiosInstance = axios.create({
-  baseURL: `${process.env.REACT_APP_API_URL}`,
+  baseURL: process.env.REACT_APP_API_URL,
   headers: {
     'Content-Type': 'application/json',
   }
@@ -58,7 +58,7 @@ axiosInstance.interceptors.request.use((config) => {
     config.headers['Content-Type'] = 'multipart/form-data';
   } else {
     config.headers['Content-Type'] = 'application/json';
-  } 
+  }
 
   return config;
 });

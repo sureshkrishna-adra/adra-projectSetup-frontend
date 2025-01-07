@@ -5,7 +5,6 @@ import { clearSearch, updateSearchValue, updateSearchClickedTrue, updateToast } 
 import Icons from 'Utils/Icons';
 
 export function SearchComponent({ className, placeholder }) {
-
     const dispatch = useDispatch();
     const { search_value, search_clicked } = useSelector(state => state.commonState);
 

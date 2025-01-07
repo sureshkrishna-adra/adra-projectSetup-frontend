@@ -1,5 +1,6 @@
 import axiosInstance from "Services/axiosInstance";
 import { handleValidation } from "Views/Common/Action/Common_action";
+import { closeTestMode } from "Views/Common/Slice/Common_slice";
 import {
     updateCandidateData,
     registerCandidateRequest,
@@ -9,8 +10,15 @@ import {
     getQuestionsResponse,
     getQuestionsFailure,
     updateAnswers,
+    submitTestByManual,
+    submitTestRequest,
+    submitTestResponse,
+    submitTestFailure,
+    submitTestRequestSpinner,
+    updateTimeOverCloseTest
 
 } from "Views/InterviewCandidates/Slice/interviewSlice";
+import { IndexedDbDeleteFun } from "Views/InterviewCandidates/IndexedDbDeleteFun";
 
 //                                                                 candidate registration on change 
 export const handleInterviewRegistrationOnChange = ipVal => dispatch => {
@@ -45,6 +53,7 @@ export const handleRegisterCandidate = params => async (dispatch) => {
         dispatch(handleValidation)
     }
 }
+
 const registerCandidateCall = params => async (dispatch) => {
     console.log(params)
     try {
@@ -61,7 +70,6 @@ const registerCandidateCall = params => async (dispatch) => {
         dispatch(registerCandidateFailure(Err?.message))
     }
 }
-
 
 //                                                                   get generated questions                                                                       
 export const handleGetQuestions = async (dispatch) => {
@@ -95,17 +103,13 @@ export const handleUpdateAnswer = (data) => (dispatch) => {
         const getRequest = store.get(targetIndex);
 
         getRequest.onsuccess = function () {
-            const targetObject = getRequest.result;
-            console.log("Fetched Object:", targetObject);
-
+            const targetObject = getRequest.result; 
             if (targetObject) {
                 targetObject.candidate_answer = updatedAnswer;
 
                 const putRequest = store.put(targetObject);
 
                 putRequest.onsuccess = function () {
-                    console.log(`Successfully updated object with id: ${targetIndex}`);
-
                     const getAllRequest = store.getAll();
                     getAllRequest.onsuccess = function () {
                         dispatch(updateAnswers(getAllRequest.result));
@@ -137,3 +141,53 @@ export const handleUpdateAnswer = (data) => (dispatch) => {
         console.error("Failed to open database:", event.target.error);
     };
 };
+
+export const handleCloseTestAndNavigate = dispatch => {
+    dispatch(closeTestMode());
+    IndexedDbDeleteFun();
+}
+
+export const handleCloseTestAutomatic = candidate_answers => async dispatch => {
+    dispatch(updateTimeOverCloseTest())
+    try { 
+        let sendCandidateAnswers = []
+        for (let i = 0; i < candidate_answers?.length; i++) {
+            sendCandidateAnswers[sendCandidateAnswers?.length] = { _id: candidate_answers[i]?._id, candidate_answer: candidate_answers[i]?.candidate_answer }
+        }
+
+        dispatch(submitTestRequest())
+        const { data } = await axiosInstance.post("/validate_answers", sendCandidateAnswers)
+        if (data?.error_code === 0) {
+            dispatch(submitTestResponse())
+        } else {
+            dispatch(submitTestFailure(data?.message))
+        }
+    }
+    catch (Err) {
+        dispatch(submitTestFailure(Err?.message))
+    }
+}
+
+export const handleCloseTestManual = dispatch => {
+    dispatch(submitTestByManual())
+}
+
+export const handleCloseTestEndpoint = candidate_answers => async dispatch => {
+    try {
+        let sendCandidateAnswers = []
+        for (let i = 0; i < candidate_answers?.length; i++) {
+            sendCandidateAnswers[sendCandidateAnswers?.length] = { _id: candidate_answers[i]?._id, candidate_answer: candidate_answers[i]?.candidate_answer }
+        }
+
+        dispatch(submitTestRequestSpinner())
+        const { data } = await axiosInstance.post("/validate_answers", sendCandidateAnswers)
+        if (data?.error_code === 0) {
+            dispatch(submitTestResponse())
+        } else {
+            dispatch(submitTestFailure(data?.message))
+        }
+    }
+    catch (Err) {
+        dispatch(submitTestFailure(Err?.message))
+    }
+}

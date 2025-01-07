@@ -9,6 +9,7 @@ import { InitializeProjectSetup } from "Views/Common/Docs/InitializeProjectSetup
 import InterviewCandidatesRegistration from "Views/InterviewCandidates/Docs/InterviewCandidatesRegistration";
 import InterviewCandidatesHome from "Views/InterviewCandidates/Docs/InterviewCandidatesHome";
 import InterviewCandidatesAuth from "Views/InterviewCandidates/Docs/InterviewCandidatesAuth";
+import CandidateStatus from "CandidateStatus";
 
 
 const App = () => {
@@ -25,6 +26,8 @@ const App = () => {
           <Route path="candidates_home" element={<InterviewCandidatesAuth />}>
             <Route index element={<InterviewCandidatesHome />} />
           </Route>
+
+          <Route path="CandidateStatus" element={<CandidateStatus />} />
 
           <Route path="*" element={<Error />} />
         </Route>

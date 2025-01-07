@@ -232,9 +232,17 @@
   margin-bottom: 0;
 }
 
-.buyAndSell_model_height {
+.model_height_lg {
   height: 45rem !important;
   overflow-y: scroll !important;
+}
+
+.interview_candidate_height{
+  height: 45rem !important;
+}
+
+.submit_confirmation_height{
+  height: 20rem !important;
 }
 
 .crm_model_no_data_height {

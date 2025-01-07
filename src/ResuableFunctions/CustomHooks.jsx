@@ -36,6 +36,17 @@ export const useDispatch = () => {
   return customDispatch;
 };
 
+//                                                    copyToClipboard                                                                        //
+export async function copyToClipboard(textToCopy) {
+  try {
+    if (navigator?.clipboard?.writeText) {
+      await navigator.clipboard.writeText(textToCopy);
+    }
+  } catch (err) {
+    console.error(err);
+  }
+}
+
 //                                                      window size                                                                          //
 export const useSize = () => {
   const dispatch = useReduxDispatch();
@@ -63,7 +74,7 @@ export const useSize = () => {
   }
 };
 
-//                                                         pagination                                                                      //
+//                                                         pagination                                                                        //
 export const DOTS = '...';
 const range = (start, end) => {
   let length = end - start + 1;

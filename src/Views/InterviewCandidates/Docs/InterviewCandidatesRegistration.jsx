@@ -7,6 +7,7 @@ import JsonData from 'Utils/JsonData';
 import { Inputfunctions } from 'ResuableFunctions/Inputfunctions';
 import { useSelector } from 'react-redux';
 import { handleRegisterCandidate } from '../Action/interviewAction';
+import SpinnerComponent from 'Components/Spinner/Spinner';
 
 const InterviewCandidatesRegistration = () => {
     const { interviewState } = useSelector((state) => state)
@@ -33,8 +34,13 @@ const InterviewCandidatesRegistration = () => {
                             <ButtonComponent
                                 type="button"
                                 className="btn btn-dark w-25"
-                                buttonName="Continue"
+                                buttonName={interviewState?.buttonSpinner ?
+                                    <SpinnerComponent />
+                                    :
+                                    "Continue"
+                                }
                                 clickFunction={() => dispatch(handleRegisterCandidate(interviewState))}
+                                btnDisable={interviewState?.buttonSpinner}
                             />
                         </div>
                     </div>

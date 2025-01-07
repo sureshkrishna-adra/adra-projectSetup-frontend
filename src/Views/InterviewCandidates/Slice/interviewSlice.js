@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import Cookies from "js-cookie";
 
 const interviewSlice = createSlice({
     name: "Interview_slice",
@@ -9,7 +10,10 @@ const interviewSlice = createSlice({
         generatedQuestions: [],
         isDataPresentInIndexedDb: true,
         selectedQuestionIndex: 0,
-        answeredQuestionPercentage: 0
+        answeredQuestionPercentage: 0,
+        test_end_timeStamp: Cookies.get("testEndOn"),
+        calculate_remaining_time: null, 
+        submit_test: false
     },
     reducers: {
         updateCandidateData(state, action) {
@@ -32,7 +36,6 @@ const interviewSlice = createSlice({
         },
         getQuestionFromDb(state, action) {
             const answeredQues = action.payload?.filter((v) => v?.candidate_answer !== '')
-
             return {
                 ...state,
                 generatedQuestions: action.payload,
@@ -52,7 +55,7 @@ const interviewSlice = createSlice({
             return {
                 ...state,
                 buttonSpinner: false,
-                // candidateData:{}
+                candidateData: {}
             }
         },
         registerCandidateFailure(state, action) {
@@ -76,15 +79,20 @@ const interviewSlice = createSlice({
                 const db = event.target.result;
                 const transaction = db.transaction("questionsObjectStore", "readwrite");
                 const store = transaction.objectStore("questionsObjectStore");
-                const objects = action?.payload[0]?.assigned_questions;
+                const objects = action?.payload?.assigned_questions;
 
-                objects.forEach((obj, ind) => store.put({ ...obj, id: ind })); // Add or update objects
+                objects?.forEach((obj, ind) => store.put({ ...obj, id: ind })); // Add or update objects
                 transaction.oncomplete = () => console.log("Objects added successfully!");
             };
 
+            if (action?.payload?.test_EndedOn) {
+                Cookies.set("testEndOn", action?.payload?.test_EndedOn)
+            }
+
             return {
                 ...state,
-                generatedQuestions: action?.payload[0]?.assigned_questions || [],
+                generatedQuestions: action?.payload?.assigned_questions || [],
+                test_end_timeStamp: action?.payload?.test_EndedOn || null,
                 initialGlow: false
             }
         },
@@ -110,6 +118,64 @@ const interviewSlice = createSlice({
                 generatedQuestions: action.payload,
                 answeredQuestionPercentage: answeredQues?.length / action.payload?.length * 100
             }
+        },
+
+
+        updateRemainingTestTiming(state, action) {
+            return {
+                ...state,
+                calculate_remaining_time: action.payload
+            }
+        },
+        updateTimeOverCloseTest(state, action) {
+            Cookies.remove("testEndOn")
+
+            return {
+                ...state,
+                calculate_remaining_time: null,
+                test_end_timeStamp: null,
+                calculate_remaining_time: null,
+                answeredQuestionPercentage:0,
+                selectedQuestionIndex:0,
+                generatedQuestions:[]
+            }
+        },
+        submitTestRequest(state, action) {
+            return {
+                ...state,
+                buttonSpinner: true
+            }
+        },
+        submitTestByManual(state, action) {
+            return {
+                ...state
+            }
+        },
+        submitTestResponse(state, action) { 
+            return {
+                ...state, 
+                buttonSpinner: false
+            }
+        },
+        submitTestFailure(state, action) {
+            return {
+                ...state,
+                buttonSpinner: false
+            }
+        },
+        submitTestRequestSpinner(state, action) {
+            Cookies.remove("testEndOn")
+
+            return {
+                ...state,
+                submit_test: true,
+                calculate_remaining_time: null,
+                test_end_timeStamp: null,
+                calculate_remaining_time: null,
+                answeredQuestionPercentage:0,
+                selectedQuestionIndex:0,
+                generatedQuestions:[]
+            }
         }
     }
 })
@@ -127,7 +193,14 @@ export const {
     getQuestionsResponse,
     getQuestionsFailure,
     updateSelectedQuestionIndex,
-    updateAnswers
+    updateAnswers,
+    updateRemainingTestTiming,
+    updateTimeOverCloseTest,
+    submitTestByManual,
+    submitTestRequest,
+    submitTestResponse,
+    submitTestFailure,
+    submitTestRequestSpinner
 
 } = actions;
 

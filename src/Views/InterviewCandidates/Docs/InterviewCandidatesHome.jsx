@@ -2,28 +2,28 @@ import ButtonComponent from 'Components/Button/Button';
 import Checkbox from 'Components/Input/Checkbox';
 import InterviewCandidatesHeader from 'Components/Panel_compnent/InterviewCandidatesHeader'
 import ProgressBarComp from 'Components/Progress/ProgressBar';
-import React, { useEffect } from 'react'
+import React, { Fragment, useEffect } from 'react'
 import { Card } from 'react-bootstrap';
 import { useSelector } from 'react-redux';
+import { CalculateTestTime } from 'ResuableFunctions/CalculateTestTime';
 import { useDispatch } from 'ResuableFunctions/CustomHooks';
 import Icons from 'Utils/Icons';
-import JsonData from 'Utils/JsonData'
-import { handleGetQuestions, handleUpdateAnswer } from 'Views/InterviewCandidates/Action/interviewAction';
-import { getQuestionFromDb, updateSelectedQuestionIndex } from 'Views/InterviewCandidates/Slice/interviewSlice';
+import { handleCloseTestAutomatic, handleCloseTestManual, handleGetQuestions, handleUpdateAnswer } from 'Views/InterviewCandidates/Action/interviewAction';
+import { getQuestionFromDb, updateRemainingTestTiming, updateSelectedQuestionIndex } from 'Views/InterviewCandidates/Slice/interviewSlice';
 
 const InterviewCandidatesHome = () => {
     const { interviewState } = useSelector((state) => state);
-    const { interviewRound } = JsonData()?.jsonOnly;
-    const dbRequest = indexedDB.open("questionsDatabase", 1);
+    // const { interviewRound } = JsonData()?.jsonOnly;
     const dispatch = useDispatch()
 
     useEffect(() => {
+        const dbRequest = indexedDB.open("questionsDatabase", 1);
         dbRequest.onupgradeneeded = function (event) {
             const db = event.target.result;
             if (!db.objectStoreNames.contains("questionsObjectStore")) {
-                db.createObjectStore("questionsObjectStore", { keyPath: "id" }); // Use "id" as the key
+                db.createObjectStore("questionsObjectStore", { keyPath: "id" }); // Create the object store
             }
-        }
+        };
 
         dbRequest.onsuccess = function (event) {
             const db = event.target.result;
@@ -32,11 +32,17 @@ const InterviewCandidatesHome = () => {
 
             const getAllRequest = store.getAll();
             getAllRequest.onsuccess = function () {
-                dispatch(getQuestionFromDb(getAllRequest.result))
+                dispatch(getQuestionFromDb(getAllRequest.result)); // Dispatch the results to the store
+            };
+            getAllRequest.onerror = function (event) {
+                console.error("Error fetching data from object store:", event.target.error);
             };
         };
-    }, [])
 
+        dbRequest.onerror = function (event) {
+            console.error("Database error:", event.target.error);
+        };
+    }, []);
 
     useEffect(() => {
         if (!interviewState?.isDataPresentInIndexedDb) {
@@ -44,7 +50,45 @@ const InterviewCandidatesHome = () => {
         }
     }, [interviewState?.isDataPresentInIndexedDb])
 
+    useEffect(() => {
+        if (interviewState?.test_end_timeStamp) {
+            const timer = setInterval(() => {
+                const updatedTimeLeft = CalculateTestTime(interviewState?.test_end_timeStamp);
+                dispatch(updateRemainingTestTiming(updatedTimeLeft))
 
+                if (!updatedTimeLeft) {
+                    const dbRequest = indexedDB.open("questionsDatabase", 1);
+                    dbRequest.onupgradeneeded = function (event) {
+                        const db = event.target.result;
+                        if (!db.objectStoreNames.contains("questionsObjectStore")) {
+                            db.createObjectStore("questionsObjectStore", { keyPath: "id" }); // Create the object store
+                        }
+                    };
+
+                    dbRequest.onsuccess = function (event) {
+                        const db = event.target.result;
+                        const transaction = db.transaction("questionsObjectStore", "readonly");
+                        const store = transaction.objectStore("questionsObjectStore");
+
+                        const getAllRequest = store.getAll();
+                        getAllRequest.onsuccess = function () {
+                            dispatch(handleCloseTestAutomatic(getAllRequest.result))
+                        };
+                        getAllRequest.onerror = function (event) {
+                            console.error("Error fetching data from object store:", event.target.error);
+                        };
+                    };
+
+                    dbRequest.onerror = function (event) {
+                        console.error("Database error:", event.target.error);
+                    };
+                    clearInterval(timer);
+                }
+            }, 1000);
+
+            return () => clearInterval(timer);
+        }
+    }, [interviewState?.test_end_timeStamp])
 
     return (
         <div className='overflow-hidden'>
@@ -73,20 +117,40 @@ const InterviewCandidatesHome = () => {
                         </Card>
                     </div>
 
-                    <div className="col-7 px-2">
+                    <div className="col-9 px-2">
                         <Card className='h-100 border-0 shadow-sm rounded-3'>
                             <Card.Header>
                                 <h5 className='mb-0 py-2'>Questions</h5>
                             </Card.Header>
                             <Card.Body>
                                 <div className='mb-4'>
-                                    <ProgressBarComp progressNow={interviewState?.answeredQuestionPercentage} animated={false} className="question-progress-bar"/>
+                                    <ProgressBarComp progressNow={interviewState?.answeredQuestionPercentage} animated={false} className="question-progress-bar" />
+                                </div>
+                                <div className="w-100 d-flex flex-wrap mb-3">
+                                    <div className="col">
+                                        <h5>
+                                            <strong>Question No:</strong>
+                                            <span>{interviewState?.selectedQuestionIndex + 1}</span>
+                                        </h5>
+                                    </div>
+                                    <div className="col text-end me-3">
+                                        {
+                                            interviewState?.calculate_remaining_time ?
+                                                <Fragment>
+                                                    <span className='pe-2'>
+                                                        {Icons?.timerIcon}
+                                                    </span>
+
+                                                    <span className='text-secondary pt-2'>
+                                                        {interviewState?.calculate_remaining_time?.minutes} : {interviewState?.calculate_remaining_time?.seconds}
+                                                    </span>
+                                                </Fragment>
+                                                :
+                                                null
+                                        }
+                                    </div>
                                 </div>
 
-                                <h5>
-                                    <strong>Question No:</strong>
-                                    <span>{interviewState?.selectedQuestionIndex + 1}</span>
-                                </h5>
                                 <p>{interviewState?.generatedQuestions[interviewState?.selectedQuestionIndex]?.question}</p>
                                 <div className='w-100'>
                                     {interviewState?.generatedQuestions[interviewState?.selectedQuestionIndex]?.options?.map((val, ind) => (
@@ -117,16 +181,19 @@ const InterviewCandidatesHome = () => {
                                 <div className="col text-end">
                                     <ButtonComponent
                                         className="btn-secondary px-5"
-                                        buttonName="Next"
-                                        clickFunction={() => dispatch(updateSelectedQuestionIndex(interviewState?.selectedQuestionIndex + 1))}
-                                        btnDisable={interviewState?.generatedQuestions?.length - 1 <= interviewState?.selectedQuestionIndex}
+                                        buttonName={interviewState?.generatedQuestions?.length - 1 <= interviewState?.selectedQuestionIndex ? "Submit" : "Next"}
+                                        clickFunction={interviewState?.generatedQuestions?.length - 1 <= interviewState?.selectedQuestionIndex ?
+                                            () => dispatch(handleCloseTestManual)
+                                            :
+                                            () => dispatch(updateSelectedQuestionIndex(interviewState?.selectedQuestionIndex + 1))
+                                        }
                                     />
                                 </div>
                             </Card.Footer>
                         </Card>
                     </div>
 
-                    <div className="col-2 d-flex flex-column">
+                    {/* <div className="col-2 d-flex flex-column">
                         <Card className='h-100 border-0 shadow-sm rounded-3'>
                             <Card.Header>
                                 <h5 className='mb-0 py-2'>Rounds</h5>
@@ -144,7 +211,7 @@ const InterviewCandidatesHome = () => {
                                 </div>
                             </Card.Body>
                         </Card>
-                    </div>
+                    </div> */}
                 </div>
             </section>
         </div>

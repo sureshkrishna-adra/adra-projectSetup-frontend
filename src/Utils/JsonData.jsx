@@ -44,7 +44,7 @@ const filesizes = (bytes, decimals = 2) => {
 const JsonData = () => {
     //main selectors
     const dispatch = useDispatch();
-    const state = store.getState();
+    // const state = store.getState();
     const { interviewState, commonState } = useSelector((state) => state);
 
     const jsonOnly = {
@@ -296,7 +296,7 @@ const JsonData = () => {
                 divClassName: 'col-12 p-1 mt-2',
             },
             {
-                name: "Parent / Husband name",
+                name: `Parent ${interviewState?.candidateData?.gender === "Female" ? "/ Husband " : ""} name`,
                 type: "text",
                 category: "input",
                 placeholder: "",
@@ -307,7 +307,7 @@ const JsonData = () => {
                 Err: commonState?.validated && !interviewState?.candidateData?.parentName ? "Parent / Husband name required" : null
             },
             {
-                name: "Parent / Husband occupation",
+                name: `Parent ${interviewState?.candidateData?.gender === "Female" ? "/ Husband " : ""} occupation`,
                 type: "text",
                 category: "input",
                 placeholder: "",
@@ -374,7 +374,7 @@ const JsonData = () => {
                 divClassName: 'col-12 p-1 mt-2',
             },
             {
-                name: "SSLC",
+                name: "School Name (SSLC)",
                 sub_heading: "school/college",
                 type: "text",
                 category: "input",
@@ -393,15 +393,15 @@ const JsonData = () => {
                 value: interviewState?.candidateData?.sslcMarks || '',
                 divClassName: 'col-6 p-1 mt-2',
                 change: (e) => {
-                    if (/^\d*$/.test(e.target.value)) {
-                        dispatch(handleInterviewRegistrationOnChange({ sslcMarks: e.target.value }))
+                    if (/^\d*\.?\d*$/.test(e.target.value)) {
+                        dispatch(handleInterviewRegistrationOnChange({ sslcMarks: e.target.value }));
                     }
                 },
                 isMandatory: true,
                 Err: commonState?.validated && !interviewState?.candidateData?.sslcMarks ? "Marks/Percentage required" : null
             },
             {
-                name: "HSC",
+                name: "School Name (HSC)",
                 sub_heading: "school/college",
                 type: "text",
                 category: "input",
@@ -420,7 +420,7 @@ const JsonData = () => {
                 value: interviewState?.candidateData?.hscMarks || '',
                 divClassName: 'col-6 p-1 mt-2',
                 change: (e) => {
-                    if (/^\d*$/.test(e.target.value)) {
+                    if (/^\d*\.?\d*$/.test(e.target.value)) {
                         dispatch(handleInterviewRegistrationOnChange({ hscMarks: e.target.value }))
                     }
                 },
@@ -433,10 +433,21 @@ const JsonData = () => {
                 category: "input",
                 placeholder: "",
                 value: interviewState?.candidateData?.collegeName || '',
-                divClassName: 'col-6 p-1 mt-2',
+                divClassName: 'col-12 col-md-6 col-lg-4 p-1 mt-2',
                 change: (e) => dispatch(handleInterviewRegistrationOnChange({ collegeName: e.target.value })),
                 isMandatory: true,
                 Err: commonState?.validated && !interviewState?.candidateData?.collegeName ? "College Name required" : null
+            },
+            {
+                name: "Qualification",
+                type: "text",
+                category: "input",
+                placeholder: "",
+                value: interviewState?.candidateData?.candidateQualification || '',
+                divClassName: 'col-12 col-md-6 col-lg-4 p-1 mt-2',
+                change: (e) => dispatch(handleInterviewRegistrationOnChange({ candidateQualification: e.target.value })),
+                isMandatory: true,
+                Err: commonState?.validated && !interviewState?.candidateData?.candidateQualification ? "Qualification required" : null
             },
             {
                 name: "CGPA/Percentage",
@@ -444,9 +455,9 @@ const JsonData = () => {
                 category: "input",
                 placeholder: "",
                 value: interviewState?.candidateData?.collegeMarks || '',
-                divClassName: 'col-6 p-1 mt-2',
+                divClassName: 'col-12 col-md-6 col-lg-4 p-1 mt-2',
                 change: (e) => {
-                    if (/^\d*$/.test(e.target.value)) {
+                    if (/^\d*\.?\d*$/.test(e.target.value)) {
                         dispatch(handleInterviewRegistrationOnChange({ collegeMarks: e.target.value }))
                     }
                 },
@@ -598,7 +609,6 @@ const JsonData = () => {
                 Err: commonState?.validated && !interviewState?.candidateData?.remarks ? "Remarks required" : null,
                 isMandatory: false
             },
-
         ],
 
         //                                                              load                                                                  //

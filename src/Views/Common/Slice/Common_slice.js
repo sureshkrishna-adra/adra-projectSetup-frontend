@@ -1,12 +1,17 @@
 import { createSlice } from "@reduxjs/toolkit";
 import Cookies from 'js-cookie'
 import { decryptData, encryptData } from "Security/Crypto/Crypto";
-import { updateCandidateData } from "Views/InterviewCandidates/Slice/interviewSlice";
+import { registerCandidateFailure, registerCandidateResponse, submitTestByManual, submitTestFailure, submitTestResponse, updateCandidateData, updateTimeOverCloseTest } from "Views/InterviewCandidates/Slice/interviewSlice";
 
 const commonSlice = createSlice({
     name: 'commonSlice',
     initialState: {
         modalShow: false,
+        moalSize: "md",
+        modal_from: null,
+        modal_type: null,
+        modal_close_btn: true,
+
         canvasShow: false,
         isOnline: true,
         currentNavMenuIndex: 0,
@@ -74,6 +79,16 @@ const commonSlice = createSlice({
                 ...state,
                 innerWidth: action.payload?.innerWidth,
                 innerHeight: action.payload?.innerHeight
+            }
+        },
+        resetModalBox(state, action) {
+            return {
+                ...state,
+                modalShow: false,
+                moalSize: "md",
+                modal_from: null,
+                modal_type: null,
+                modal_close_btn: true,
             }
         },
 
@@ -297,12 +312,71 @@ const commonSlice = createSlice({
             }
         },
 
+        //close test mode 
+        closeTestMode(state, action) {
+            Cookies.remove("token")
+            Cookies.remove("user_role")
+
+            return {
+                ...state,
+                modalShow: false,
+                moalSize: "md",
+                modal_from: null,
+                modal_type: null,
+                modal_close_btn: true,
+                token: null,
+                user_role: null
+            }
+        }
     },
     extraReducers: (builder) => {
         builder
             //candidate register onChange validated false
             .addCase(updateCandidateData, (state, action) => {
                 state.validated = false
+            })
+            .addCase(registerCandidateResponse, (state, action) => {
+                state.usernamee = action.payload?.username
+                state.passwordd = action.payload?.password
+                state.moalSize = "xl"
+                state.modal_from = "interview_candidate"
+                state.modal_type = "registration_completed"
+                state.modalShow = true
+                state.modal_close_btn = false
+            })
+            .addCase(registerCandidateFailure, (state, action) => {
+                state.Err = action.payload
+                state.Toast_Type = "error"
+            })
+            
+            .addCase(submitTestByManual, (state, action) => {
+                state.moalSize = "md"
+                state.modal_from = "interview_candidate"
+                state.modal_type = "submit_confirmation"
+                state.modalShow = true
+                state.modal_close_btn = false
+            })
+            
+            .addCase(submitTestResponse, (state, action) => {
+                state.moalSize = "xl"
+                state.modal_from = "interview_candidate"
+                state.modal_type = "test_completed"
+                state.modalShow = true
+                state.modal_close_btn = false
+            })
+            .addCase(submitTestFailure, (state, action) => {
+                state.Err = action.payload
+                state.Toast_Type = "error"
+            })
+
+            .addCase(updateTimeOverCloseTest, (state, action) => {
+                state.usernamee = action.payload?.username
+                state.passwordd = action.payload?.password
+                state.moalSize = "xl"
+                state.modal_from = "interview_candidate"
+                state.modal_type = "time_finished"
+                state.modalShow = true
+                state.modal_close_btn = false
             })
 
     }
@@ -320,6 +394,7 @@ export const {
     updateEyeFunction,
     clearError,
     updateResetAllMenus,
+    resetModalBox,
 
     resetValidation,
     updateValidation,
@@ -340,7 +415,8 @@ export const {
     updateApplyFilterClickedTrue,
     updateApplyFilterClickedFalse,
 
-    updateEntriesCount
+    updateEntriesCount,
+    closeTestMode
 } = actions;
 
 export default reducer

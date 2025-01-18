@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import Cookies from "js-cookie";
+import { initializeDB } from "ResuableFunctions/CustomHooks";
 
 const interviewSlice = createSlice({
     name: "Interview_slice",
@@ -12,7 +13,7 @@ const interviewSlice = createSlice({
         selectedQuestionIndex: 0,
         answeredQuestionPercentage: 0,
         test_end_timeStamp: Cookies.get("testEndOn"),
-        calculate_remaining_time: null, 
+        calculate_remaining_time: null,
         submit_test: false
     },
     reducers: {
@@ -74,16 +75,29 @@ const interviewSlice = createSlice({
             }
         },
         getQuestionsResponse(state, action) {
-            const dbRequest = indexedDB.open("questionsDatabase", 1);
-            dbRequest.onsuccess = function (event) {
-                const db = event.target.result;
-                const transaction = db.transaction("questionsObjectStore", "readwrite");
-                const store = transaction.objectStore("questionsObjectStore");
-                const objects = action?.payload?.assigned_questions;
+            initializeDB(process.env.REACT_APP_INDEXEDDB_DATABASE_NAME, process.env.REACT_APP_INDEXEDDB_DATABASE_VERSION, process.env.REACT_APP_INDEXEDDB_DATABASE_STORENAME)
+                .then((db) => {
+                    const transaction = db.transaction(process.env.REACT_APP_INDEXEDDB_DATABASE_STORENAME, "readwrite");
+                    const store = transaction.objectStore(process.env.REACT_APP_INDEXEDDB_DATABASE_STORENAME);
+                    const objects = action?.payload?.assigned_questions;
 
-                objects?.forEach((obj, ind) => store.put({ ...obj, id: ind })); // Add or update objects
-                transaction.oncomplete = () => console.log("Objects added successfully!");
-            };
+                    objects?.forEach((obj, ind) => store.put({ ...obj, id: ind })); // Add or update objects
+                    transaction.oncomplete = () => console.log("Objects added successfully!");
+                })
+                .catch((error) => {
+                    console.error("Database initialization failed:", error);
+                })
+
+            // const dbRequest = indexedDB.open("questionsDatabase", 1);
+            // dbRequest.onsuccess = function (event) {
+            //     const db = event.target.result;
+            //     const transaction = db.transaction("questionsObjectStore", "readwrite");
+            //     const store = transaction.objectStore("questionsObjectStore");
+            //     const objects = action?.payload?.assigned_questions;
+
+            //     objects?.forEach((obj, ind) => store.put({ ...obj, id: ind })); // Add or update objects
+            //     transaction.oncomplete = () => console.log("Objects added successfully!");
+            // };
 
             if (action?.payload?.test_EndedOn) {
                 Cookies.set("testEndOn", action?.payload?.test_EndedOn)
@@ -135,9 +149,9 @@ const interviewSlice = createSlice({
                 calculate_remaining_time: null,
                 test_end_timeStamp: null,
                 calculate_remaining_time: null,
-                answeredQuestionPercentage:0,
-                selectedQuestionIndex:0,
-                generatedQuestions:[]
+                answeredQuestionPercentage: 0,
+                selectedQuestionIndex: 0,
+                generatedQuestions: []
             }
         },
         submitTestRequest(state, action) {
@@ -151,9 +165,9 @@ const interviewSlice = createSlice({
                 ...state
             }
         },
-        submitTestResponse(state, action) { 
+        submitTestResponse(state, action) {
             return {
-                ...state, 
+                ...state,
                 buttonSpinner: false
             }
         },
@@ -172,9 +186,9 @@ const interviewSlice = createSlice({
                 calculate_remaining_time: null,
                 test_end_timeStamp: null,
                 calculate_remaining_time: null,
-                answeredQuestionPercentage:0,
-                selectedQuestionIndex:0,
-                generatedQuestions:[]
+                answeredQuestionPercentage: 0,
+                selectedQuestionIndex: 0,
+                generatedQuestions: []
             }
         }
     }

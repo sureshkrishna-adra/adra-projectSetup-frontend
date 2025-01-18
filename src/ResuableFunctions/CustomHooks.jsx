@@ -142,3 +142,30 @@ export const usePagination = ({
 
   return paginationRange;
 };
+
+
+//                                                                Indexed db                                                                 //
+export const initializeDB = (dbName, version, storeName) => {
+  return new Promise((resolve, reject) => {
+    const dbRequest = indexedDB.open(dbName, version);
+
+    // Handle the database upgrade (create object stores)
+    dbRequest.onupgradeneeded = (event) => {
+      const db = event.target.result;
+
+      // If the object store does not exist, create it
+      if (!db.objectStoreNames.contains(storeName)) {
+        db.createObjectStore(storeName, { keyPath: "id" });
+      }
+    };
+
+    dbRequest.onsuccess = (event) => {
+      const db = event.target.result;
+      resolve(db); // Return the database instance
+    };
+
+    dbRequest.onerror = (event) => {
+      reject(event.target.error); // Return the error
+    };
+  });
+}

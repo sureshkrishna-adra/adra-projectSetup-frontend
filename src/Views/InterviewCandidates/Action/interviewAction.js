@@ -19,6 +19,7 @@ import {
 
 } from "Views/InterviewCandidates/Slice/interviewSlice";
 import { IndexedDbDeleteFun } from "Views/InterviewCandidates/IndexedDbDeleteFun";
+import { initializeDB } from "ResuableFunctions/CustomHooks";
 
 //                                                                 candidate registration on change 
 export const handleInterviewRegistrationOnChange = ipVal => dispatch => {
@@ -90,56 +91,53 @@ export const handleGetQuestions = async (dispatch) => {
 
 //                                                                   update answers in index db                                                                     
 export const handleUpdateAnswer = (data) => (dispatch) => {
-    const dbRequest = indexedDB.open("questionsDatabase", 1);
+    initializeDB(process.env.REACT_APP_INDEXEDDB_DATABASE_NAME, process.env.REACT_APP_INDEXEDDB_DATABASE_VERSION, process.env.REACT_APP_INDEXEDDB_DATABASE_STORENAME)
+        .then((db) => {
+            const transaction = db.transaction(process.env.REACT_APP_INDEXEDDB_DATABASE_STORENAME, "readwrite");
+            const store = transaction.objectStore(process.env.REACT_APP_INDEXEDDB_DATABASE_STORENAME);
 
-    dbRequest.onsuccess = function (event) {
-        const db = event.target.result;
-        const transaction = db.transaction("questionsObjectStore", "readwrite");
-        const store = transaction.objectStore("questionsObjectStore");
+            const targetIndex = data?.updationInd;
+            const updatedAnswer = data?.ans;
 
-        const targetIndex = data?.updationInd;
-        const updatedAnswer = data?.ans;
+            const getRequest = store.get(targetIndex);
 
-        const getRequest = store.get(targetIndex);
+            getRequest.onsuccess = function () {
+                const targetObject = getRequest.result;
+                if (targetObject) {
+                    targetObject.candidate_answer = updatedAnswer;
 
-        getRequest.onsuccess = function () {
-            const targetObject = getRequest.result; 
-            if (targetObject) {
-                targetObject.candidate_answer = updatedAnswer;
+                    const putRequest = store.put(targetObject);
 
-                const putRequest = store.put(targetObject);
-
-                putRequest.onsuccess = function () {
-                    const getAllRequest = store.getAll();
-                    getAllRequest.onsuccess = function () {
-                        dispatch(updateAnswers(getAllRequest.result));
+                    putRequest.onsuccess = function () {
+                        const getAllRequest = store.getAll();
+                        getAllRequest.onsuccess = function () {
+                            dispatch(updateAnswers(getAllRequest.result));
+                        };
                     };
-                };
 
-                putRequest.onerror = function (event) {
-                    console.error("Failed to update object:", event.target.error);
-                };
-            } else {
-                console.error(`No object found with id: ${targetIndex}`);
-            }
-        };
+                    putRequest.onerror = function (event) {
+                        console.error("Failed to update object:", event.target.error);
+                    };
+                } else {
+                    console.error(`No object found with id: ${targetIndex}`);
+                }
+            };
 
-        getRequest.onerror = function (event) {
-            console.error("Failed to fetch object:", event.target.error);
-        };
+            getRequest.onerror = function (event) {
+                console.error("Failed to fetch object:", event.target.error);
+            };
 
-        transaction.oncomplete = function () {
-            console.log("Transaction completed successfully.");
-        };
+            transaction.oncomplete = function () {
+                console.log("Transaction completed successfully.");
+            };
 
-        transaction.onerror = function (event) {
-            console.error("Transaction failed:", event.target.error);
-        };
-    };
-
-    dbRequest.onerror = function (event) {
-        console.error("Failed to open database:", event.target.error);
-    };
+            transaction.onerror = function (event) {
+                console.error("Transaction failed:", event.target.error);
+            };
+        })
+        .catch((error) => {
+            console.error("Failed to open database:", error);
+        })
 };
 
 export const handleCloseTestAndNavigate = dispatch => {
@@ -149,7 +147,7 @@ export const handleCloseTestAndNavigate = dispatch => {
 
 export const handleCloseTestAutomatic = candidate_answers => async dispatch => {
     dispatch(updateTimeOverCloseTest())
-    try { 
+    try {
         let sendCandidateAnswers = []
         for (let i = 0; i < candidate_answers?.length; i++) {
             sendCandidateAnswers[sendCandidateAnswers?.length] = { _id: candidate_answers[i]?._id, candidate_answer: candidate_answers[i]?.candidate_answer }

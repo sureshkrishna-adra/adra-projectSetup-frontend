@@ -1,47 +1,51 @@
-import ButtonComponent from 'Components/Button/Button';
-import Checkbox from 'Components/Input/Checkbox';
-import InterviewCandidatesHeader from 'Components/Panel_compnent/InterviewCandidatesHeader'
-import ProgressBarComp from 'Components/Progress/ProgressBar';
 import React, { Fragment, useEffect } from 'react'
 import { Card } from 'react-bootstrap';
 import { useSelector } from 'react-redux';
 import { CalculateTestTime } from 'ResuableFunctions/CalculateTestTime';
-import { useDispatch } from 'ResuableFunctions/CustomHooks';
-import Icons from 'Utils/Icons';
+import { initializeDB, useDispatch } from 'ResuableFunctions/CustomHooks';
 import { handleCloseTestAutomatic, handleCloseTestManual, handleGetQuestions, handleUpdateAnswer } from 'Views/InterviewCandidates/Action/interviewAction';
 import { getQuestionFromDb, updateRemainingTestTiming, updateSelectedQuestionIndex } from 'Views/InterviewCandidates/Slice/interviewSlice';
+import ProgressBarComp from 'Components/Progress/ProgressBar';
+import ButtonComponent from 'Components/Button/Button';
+import Checkbox from 'Components/Input/Checkbox';
+import InterviewCandidatesHeader from 'Components/Panel_compnent/InterviewCandidatesHeader'
+import Icons from 'Utils/Icons';
 
 const InterviewCandidatesHome = () => {
     const { interviewState } = useSelector((state) => state);
     // const { interviewRound } = JsonData()?.jsonOnly;
     const dispatch = useDispatch()
 
+    const handleVisibilityChange = () => {
+        if (document.visibilityState === "hidden") {
+            alert("Tab switch is not allowed during the session!");
+        }
+    };
+
     useEffect(() => {
-        const dbRequest = indexedDB.open("questionsDatabase", 1);
-        dbRequest.onupgradeneeded = function (event) {
-            const db = event.target.result;
-            if (!db.objectStoreNames.contains("questionsObjectStore")) {
-                db.createObjectStore("questionsObjectStore", { keyPath: "id" }); // Create the object store
-            }
+        document.addEventListener("visibilitychange", handleVisibilityChange);
+        return () => {
+            document.removeEventListener("visibilitychange", handleVisibilityChange);
         };
+    }, []);
 
-        dbRequest.onsuccess = function (event) {
-            const db = event.target.result;
-            const transaction = db.transaction("questionsObjectStore", "readonly");
-            const store = transaction.objectStore("questionsObjectStore");
+    useEffect(() => {
+        initializeDB(process.env.REACT_APP_INDEXEDDB_DATABASE_NAME, process.env.REACT_APP_INDEXEDDB_DATABASE_VERSION, process.env.REACT_APP_INDEXEDDB_DATABASE_STORENAME)
+            .then((db) => {
+                const transaction = db.transaction(process.env.REACT_APP_INDEXEDDB_DATABASE_STORENAME, "readonly");
+                const store = transaction.objectStore(process.env.REACT_APP_INDEXEDDB_DATABASE_STORENAME);
 
-            const getAllRequest = store.getAll();
-            getAllRequest.onsuccess = function () {
-                dispatch(getQuestionFromDb(getAllRequest.result)); // Dispatch the results to the store
-            };
-            getAllRequest.onerror = function (event) {
-                console.error("Error fetching data from object store:", event.target.error);
-            };
-        };
-
-        dbRequest.onerror = function (event) {
-            console.error("Database error:", event.target.error);
-        };
+                const getAllRequest = store.getAll();
+                getAllRequest.onsuccess = function () {
+                    dispatch(getQuestionFromDb(getAllRequest.result))
+                };
+                getAllRequest.onerror = function (event) {
+                    console.error("Error fetching data from object store:", event.target.error);
+                };
+            })
+            .catch((error) => {
+                console.error("Database initialization failed:", error);
+            });
     }, []);
 
     useEffect(() => {
@@ -57,31 +61,21 @@ const InterviewCandidatesHome = () => {
                 dispatch(updateRemainingTestTiming(updatedTimeLeft))
 
                 if (!updatedTimeLeft) {
-                    const dbRequest = indexedDB.open("questionsDatabase", 1);
-                    dbRequest.onupgradeneeded = function (event) {
-                        const db = event.target.result;
-                        if (!db.objectStoreNames.contains("questionsObjectStore")) {
-                            db.createObjectStore("questionsObjectStore", { keyPath: "id" }); // Create the object store
-                        }
-                    };
-
-                    dbRequest.onsuccess = function (event) {
-                        const db = event.target.result;
-                        const transaction = db.transaction("questionsObjectStore", "readonly");
-                        const store = transaction.objectStore("questionsObjectStore");
-
-                        const getAllRequest = store.getAll();
-                        getAllRequest.onsuccess = function () {
-                            dispatch(handleCloseTestAutomatic(getAllRequest.result))
-                        };
-                        getAllRequest.onerror = function (event) {
-                            console.error("Error fetching data from object store:", event.target.error);
-                        };
-                    };
-
-                    dbRequest.onerror = function (event) {
-                        console.error("Database error:", event.target.error);
-                    };
+                    initializeDB(process.env.REACT_APP_INDEXEDDB_DATABASE_NAME, process.env.REACT_APP_INDEXEDDB_DATABASE_VERSION, process.env.REACT_APP_INDEXEDDB_DATABASE_STORENAME)
+                        .then((db) => {
+                            const transaction = db.transaction(process.env.REACT_APP_INDEXEDDB_DATABASE_STORENAME, "readonly");
+                            const store = transaction.objectStore(process.env.REACT_APP_INDEXEDDB_DATABASE_STORENAME);
+                            const getAllRequest = store.getAll();
+                            getAllRequest.onsuccess = function () {
+                                dispatch(handleCloseTestAutomatic(getAllRequest.result));
+                            };
+                            getAllRequest.onerror = function (event) {
+                                console.error("Error fetching data from object store:", event.target.error);
+                            };
+                        })
+                        .catch((error) => {
+                            console.error("Database initialization failed:", error);
+                        });
                     clearInterval(timer);
                 }
             }, 1000);

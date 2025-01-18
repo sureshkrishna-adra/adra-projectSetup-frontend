@@ -606,7 +606,6 @@ const JsonData = () => {
                 value: interviewState?.candidateData?.remarks || '',
                 divClassName: 'col-12 p-1 mt-2',
                 change: (e) => dispatch(handleInterviewRegistrationOnChange({ remarks: e.target.value })),
-                Err: commonState?.validated && !interviewState?.candidateData?.remarks ? "Remarks required" : null,
                 isMandatory: false
             },
         ],

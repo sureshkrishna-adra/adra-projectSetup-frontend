@@ -12,7 +12,7 @@ const interviewSlice = createSlice({
         isDataPresentInIndexedDb: true,
         selectedQuestionIndex: 0,
         answeredQuestionPercentage: 0,
-        test_end_timeStamp: Cookies.get("testEndOn"),
+        test_end_timeStamp: Cookies.get("testEndOn") || '',
         calculate_remaining_time: null,
         submit_test: false
     },
@@ -87,17 +87,6 @@ const interviewSlice = createSlice({
                 .catch((error) => {
                     console.error("Database initialization failed:", error);
                 })
-
-            // const dbRequest = indexedDB.open("questionsDatabase", 1);
-            // dbRequest.onsuccess = function (event) {
-            //     const db = event.target.result;
-            //     const transaction = db.transaction("questionsObjectStore", "readwrite");
-            //     const store = transaction.objectStore("questionsObjectStore");
-            //     const objects = action?.payload?.assigned_questions;
-
-            //     objects?.forEach((obj, ind) => store.put({ ...obj, id: ind })); // Add or update objects
-            //     transaction.oncomplete = () => console.log("Objects added successfully!");
-            // };
 
             if (action?.payload?.test_EndedOn) {
                 Cookies.set("testEndOn", action?.payload?.test_EndedOn)

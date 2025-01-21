@@ -1,4 +1,3 @@
-import { Fragment } from "react";
 import ButtonComponent from "Components/Button/Button";
 import { useCustomNavigate, useDispatch } from "ResuableFunctions/CustomHooks";
 import ModalComponent from "Components/Modal/Modal";
@@ -123,14 +122,14 @@ export function OverallModel() {
             case "interview_candidate":
                 switch (commonState?.modal_type) {
                     case "registration_completed":
-                        return <div className="w-100 interview_candidate_height">
+                        return <div className="w-100">
                             <div className="row py-5 align-items-center justify-content-center h-100 w-100">
-                                <div className="col-6 text-center">
+                                <div className="col-12 text-center">
                                     {Icons.testSucccess}
                                     <h5 className="text-center my-3">Registration successfull</h5>
                                     <p className="text-secondary">Your Login credentials</p>
 
-                                    <div className="py-1">
+                                    <div className="py-3 border rounded-4">
                                         <h5 className="text-center my-3 fs-17">Username : <span>{commonState?.usernamee}</span></h5>
                                         <h5 className="text-center my-3 fs-17">Password : <span>{commonState?.passwordd}</span></h5>
 
@@ -343,7 +342,7 @@ export function OverallModel() {
             showModalFooter={true}
             modalFooterClassname="border-0"
             modalFooter={modalFooterFun()}
-            modalClassname={commonState?.moalSize === "lg" ? "model_height_lg" : ''}
+            modalClassname={["lg", "xl"].includes(commonState?.moalSize) ? "model_height_lg" : ''}
         />
     )
 }

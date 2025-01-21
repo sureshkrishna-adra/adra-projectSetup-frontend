@@ -11,8 +11,7 @@ export const InitializeProjectSetup = () => {
     const { commonState, interviewState } = useSelector((state) => state);
     const sizer = useSize();
     const dispatch = useDispatch();
-
-    //initial state
+ 
     useEffect(() => {
         dispatch(updateIsonline(navigator.onLine))
         dispatch(updateScreenCurrentDimension(sizer))

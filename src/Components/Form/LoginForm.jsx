@@ -7,6 +7,7 @@ import ButtonComponent from 'Components/Button/Button';
 import { useCustomNavigate, useDispatch } from 'ResuableFunctions/CustomHooks';
 import SpinnerComponent from 'Components/Spinner/Spinner';
 import { handleEyeFunction, handleLogin, handleLoginCredentials, handleValidation } from 'Views/Common/Action/Common_action';
+import sha256 from 'sha256';
 
 const LoginForm = () => {
     const { usernamee, passwordd, eyeOpen, buttonSpinner, validated } = useSelector((state) => state.commonState);
@@ -22,8 +23,8 @@ const LoginForm = () => {
     const handleSubmit = () => {
         if (usernamee && passwordd) {
             let username = usernamee
-            let password = passwordd
-            const basicAuth = btoa(`${username}:${password}`);
+            let password = passwordd 
+            const basicAuth = btoa(`${username}:${sha256(password)}`);
             dispatch(handleLogin(basicAuth, navigate))
         } else {
             dispatch(handleValidation)

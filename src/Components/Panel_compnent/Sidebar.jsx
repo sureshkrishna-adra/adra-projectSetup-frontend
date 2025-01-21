@@ -38,8 +38,6 @@ const Sidebar = ({
         />
     }
 
-    
-
     const bodyContent = () => {
         return menuOptions.map((v, i) => (
             <React.Fragment key={i}>
@@ -52,6 +50,7 @@ const Sidebar = ({
             </React.Fragment>
         ))
     }
+
     const bodyFun = (ifOffcanvas) => {
         return ifOffcanvas ?
             <div className="row justify-content-center">
@@ -62,9 +61,6 @@ const Sidebar = ({
             :
             bodyContent()
     }
-
-
-
 
     const footerContent = (type) => {
         return <div className="sidebar-footer">
@@ -82,6 +78,7 @@ const Sidebar = ({
             </div>
         </div>
     }
+
     const footerFun = (ifOffcanvas) => {
         return ifOffcanvas ?
             <div className="row justify-content-center">
@@ -114,13 +111,10 @@ const Sidebar = ({
                             null
                     }
 
-
-
                     {/* body */}
                     <div className={footer ? "sidebar-body-with-footer" : "sidebar-body-without-footer"}>
                         {bodyFun()}
                     </div>
-
 
                     {/* footer */}
                     {
@@ -131,8 +125,6 @@ const Sidebar = ({
                     }
                 </div>
             </div>
-
-
 
             <OffCanvas
                 offCanvasShow={offCanvasShow}

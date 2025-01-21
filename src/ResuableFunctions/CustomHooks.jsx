@@ -59,8 +59,8 @@ export const useSize = () => {
           innerWidth: window.innerWidth,
         }
       ))
-
     };
+    
     window.addEventListener("resize", windowSizeHandler);
 
     return () => {

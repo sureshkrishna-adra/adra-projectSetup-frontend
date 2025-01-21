@@ -4,6 +4,10 @@ export function LoginSuccessNavigateTo(user_role, navigate) {
             navigate("/candidates_home");
             break;
 
+        case "admin":
+            navigate("/dashboard");
+            break;
+
         default:
             break;
     }

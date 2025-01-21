@@ -9,7 +9,7 @@ const commonSlice = createSlice({
         modalShow: false,
         moalSize: "md",
         modal_from: null,
-        modal_type: null,
+        modal_type: null, 
         modal_close_btn: true,
 
         canvasShow: false,
@@ -29,7 +29,7 @@ const commonSlice = createSlice({
         //token
         token: Cookies.get("token") ? decryptData(Cookies.get("token")) : '',
         user_id: Cookies.get('user_id') || '',
-        user_role: Cookies.get("user_role"),
+        user_role: Cookies.get("user_role") || '',
 
         //no of entries
         showing_entries: [10, 20, 50],
@@ -338,7 +338,7 @@ const commonSlice = createSlice({
             .addCase(registerCandidateResponse, (state, action) => {
                 state.usernamee = action.payload?.username
                 state.passwordd = action.payload?.password
-                state.moalSize = "xl"
+                state.moalSize = "md"
                 state.modal_from = "interview_candidate"
                 state.modal_type = "registration_completed"
                 state.modalShow = true
@@ -348,7 +348,7 @@ const commonSlice = createSlice({
                 state.Err = action.payload
                 state.Toast_Type = "error"
             })
-            
+
             .addCase(submitTestByManual, (state, action) => {
                 state.moalSize = "md"
                 state.modal_from = "interview_candidate"
@@ -356,7 +356,7 @@ const commonSlice = createSlice({
                 state.modalShow = true
                 state.modal_close_btn = false
             })
-            
+
             .addCase(submitTestResponse, (state, action) => {
                 state.moalSize = "xl"
                 state.modal_from = "interview_candidate"

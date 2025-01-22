@@ -11,7 +11,7 @@ const interviewSlice = createSlice({
         isDataPresentInIndexedDb: true,
         selectedQuestionIndex: 0,
         answeredQuestionPercentage: 0,
-        test_end_timeStamp: Cookies.get("testEndOn"),
+        test_end_timeStamp: Cookies.get("testEndOn") || '',
         calculate_remaining_time: null, 
         submit_test: false
     },

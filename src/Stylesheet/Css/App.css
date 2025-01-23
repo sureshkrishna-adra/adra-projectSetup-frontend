@@ -18,7 +18,7 @@
   --sidebar-background-color: #ffffff;
   --sidebar-border: 0px solid rgba(236, 236, 236, 0.88);
 
-  --btn-brand-bg-color: #FFF;
+  --btn-brand-bg-color: black;
   --btn-brand-border-color: black;
   --btn-brand-color: white;
 
@@ -26,7 +26,7 @@
   --btn-brand-outerLayer-border-color: black;
   --btn-brand-outerLayer-color: black;
 
-  --header-height: 5rem;
+  --header-height: 6rem;
   --header-padding-y: 0rem 0;
   --header-title-body-bg: #042126;
   --header-body-bg: #FFF;
@@ -75,7 +75,7 @@ input::-webkit-inner-spin-button {
 
 ::-webkit-scrollbar-thumb {
   border-radius: 12px;
-  background: #d82d2d;
+  background: #aaa;
 }
 
 .is-invalid {
@@ -111,9 +111,8 @@ body {
   width: var(--sidebar-width);
   height: var(--root-height);
   padding: var(--sidebar-y-padding) 0;
-  background: var(--sidebar-background-color) !important;
-  overflow: hidden;
-  font-size: .9rem;
+  background: var(--sidebar-background-color);
+  border: var(--sidebar-border);
 }
 
 .sidebar-header {
@@ -122,14 +121,16 @@ body {
 
 .sidebar-body-with-footer {
   height: calc(var(--root-height) - (var(--sidebar-y-padding) + 2rem) - var(--sidebar-header-height) - var(--sidebar-body-footer-height));
-  padding: var(--sidebar-body-padding);
-  margin: var(--sidebar-body-margin);
+  padding: var(--sidebar-body-padding-y);
 }
 
 .sidebar-body-without-footer {
-  height: calc(var(--root-height) - (var(--sidebar-y-padding) + 10rem) - var(--sidebar-header-height));
-  padding: var(--sidebar-body-padding);
-  /* margin-top: 1.5rem; */
+  height: calc(var(--root-height) - (var(--sidebar-y-padding) + 2rem) - var(--sidebar-header-height));
+  padding: var(--sidebar-body-padding-y);
+}
+
+.sidebar-footer {
+  height: var(--sidebar-body-footer-height);
 }
 
 .sidebar-body {
@@ -182,33 +183,31 @@ body {
   font-weight: 500;
 }
 
-.navlink-sidebar.active {
-  background-color: var(--btn-brand-bg-color);
-  color: #28304B !important;
-}
-
-.navlink-sidebar:hover {
-  background-color: #C71943;
-  color: #ffffff !important;
-}
-
-.navlink-sidebar.active:hover {
-  background-color: var(--btn-brand-bg-color);
-}
-
-.navlink-sidebar.active,
-.navlink-sidebar.active svg path,
-.navlink-sidebar:hover svg path {
-  color: #FFFFFF !important;
-  stroke: #ffffff !important;
-  background-color: #C71943 !important;
-}
-
 .placeholder-height-15-percent {
   height: 10rem;
 }
 
+.navlink-sidebar.active {
+  background-color: var(--btn-brand-bg-color);
+  color: var(--btn-brand-color) !important;
 
+}
+
+.navlink-sidebar:hover {
+  background-color: #e3e3e382;
+  font-size: 1.05rem;
+  font-weight: bold !important;
+}
+
+.navlink-sidebar.active:hover {
+  background-color: var(--btn-brand-bg-color);
+  color: var(--btn-brand-color) !important;
+
+}
+
+.navlink-sidebar.active svg path {
+  stroke: white !important;
+}
 
 @media (max-width:1200px) {
 
@@ -266,6 +265,7 @@ body {
 /* header  */
 header {
   height: var(--header-height);
+  padding: var(--main-content-padding-y);
 }
 
 .header-card {

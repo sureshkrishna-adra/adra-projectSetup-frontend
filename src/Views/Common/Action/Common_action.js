@@ -4,7 +4,6 @@ import axiosInstance from 'Services/axiosInstance';
 import {
     updateModalShow,
     updateCanvasShow,
-    updateCurrentNavMenuIndex,
     updateLoginCredentials,
     updateEyeFunction,
 
@@ -31,28 +30,6 @@ export const handleUpdateCanvasShow = (dispatch) => {
     dispatch(updateCanvasShow())
 }
 
-export const handleCurrentMenuInd = (menus, myCurrPath) => dispatch => {
-    if (myCurrPath) {
-        const ifNested = menus.filter((value) => {
-            const path = value?.options?.filter((nestedValue) => {
-                if (myCurrPath === nestedValue.route_name) {
-                    dispatch(updateCurrentNavMenuIndex({ name: nestedValue?.name }))
-                    return nestedValue
-                }
-            })
-            if (path?.length) {
-                return path
-            }
-        })
-        if (!ifNested.length) {
-            const currInd = menus.filter((v) => myCurrPath === v.route_name ? v : null)
-            dispatch(updateCurrentNavMenuIndex({ name: currInd[0]?.name }))
-        }
-    } else {
-        dispatch(updateCurrentNavMenuIndex({ name: 'Home' }))
-    }
-}
-
 export const handleLoginCredentials = (data) => (dispatch) => {
     dispatch(updateLoginCredentials(data))
 }
@@ -77,7 +54,7 @@ export const handleResetValidation = dispatch => {
 export const handleLogin = (basicAuth, navigate) => async (dispatch) => {
     try {
         dispatch(loginRequest())
-        const { data } = await axios.post(`${process.env.REACT_APP_API_URL}/candidate_log_in`, {}, {
+        const { data } = await axios.post(`${process.env.REACT_APP_API_URL}/login`, {}, {
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Basic ${basicAuth}`,

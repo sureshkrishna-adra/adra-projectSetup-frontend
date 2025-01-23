@@ -23,7 +23,8 @@ const LoginForm = () => {
     const handleSubmit = () => {
         if (usernamee && passwordd) {
             let username = usernamee
-            let password = passwordd 
+            let password = passwordd
+            
             const basicAuth = btoa(`${username}:${sha256(password)}`);
             dispatch(handleLogin(basicAuth, navigate))
         } else {

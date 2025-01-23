@@ -48,98 +48,51 @@ const JsonData = () => {
     const { interviewState, commonState } = useSelector((state) => state);
 
     const jsonOnly = {
-        sidebarMenus: [
+        adminSidebarMenus: [
             {
                 icon: Icons.dashboardIcon,
                 name: "Dashboard",
-                route: "/dashboard/home",
-                route_name: "home",
-                type: "link",
-                in: 0,
+                route: "/dashboard/home"
             },
             {
-                icon: Icons.analyticsIcon,
-                name: "Analytics",
-                route: "/dashboard/analytics",
-                route_name: "analytics",
-                type: "link",
-                in: 1
+                icon: Icons?.employeeIcon,
+                name: "Employees",
+                route: "/dashboard/employees"
             },
             {
-                icon: Icons.servicesIcon,
-                name: "Services",
-                route: "/dashboard/services",
-                route_name: "services",
-                type: "accordion",
-                options: [
-                    {
-                        icon: Icons.subServivesIcon,
-                        name: "Load Details",
-                        route: "/dashboard/services/load_details",
-                        route_name: "load_details",
-                        in: 21
-                    },
-                    {
-                        icon: Icons.subServivesIcon,
-                        name: "Truck Details",
-                        route: "/dashboard/services/truck_details",
-                        route_name: "truck_details",
-                        in: 22
-                    },
-                    {
-                        icon: Icons.subServivesIcon,
-                        name: "Driver Details",
-                        route: "/dashboard/services/driver_details",
-                        route_name: "driver_details",
-                        in: 23
-                    },
-                    {
-                        icon: Icons.subServivesIcon,
-                        name: "Buy and Sell Details",
-                        route: "/dashboard/services/buy_sell_details",
-                        route_name: "buy_sell_details",
-                        in: 23
-                    },
-                    {
-                        icon: Icons.subServivesIcon,
-                        name: "Insurance",
-                        route: "/dashboard/services/insurance",
-                        route_name: "insurance",
-                        in: 24
-                    },
-                    {
-                        icon: Icons.subServivesIcon,
-                        name: "Fast Tag",
-                        route: "/dashboard/services/fast_tag",
-                        route_name: "fast_tag",
-                        in: 24
-                    },
-                ],
-                in: 2
+                icon: Icons.attendanceIcon,
+                name: "Attendance",
+                route: "/dashboard/attendance"
             },
             {
-                icon: Icons.blogIcon,
-                name: "Blog",
-                route: "/dashboard/blog",
-                route_name: "blog",
-                type: "link",
-                in: 3
+                icon: Icons.payrollIcon,
+                name: "Payroll",
+                route: "/dashboard/payroll"
             },
             {
-                icon: Icons.feedbackIcon,
-                name: "Feedback & Complaints",
-                route: "/dashboard/feedback_complaints",
-                route_name: "feedback_complaints",
-                type: "link",
-                in: 4
+                icon: Icons.interviewIcon,
+                name: "Interview",
+                route: "/dashboard/interview"
             },
             {
-                icon: Icons.crmIcon,
-                name: "CRM",
-                route: "/dashboard/crm",
-                route_name: "crm",
-                type: "link",
-                in: 5
+                icon: Icons.circularIcon,
+                name: "Circular",
+                route: "/dashboard/circular"
+            },
+            {
+                icon: Icons.invoicesIcon,
+                name: "Invoices",
+                route: "/dashboard/invoices"
+            },
+            {
+                icon: Icons.notesIcon,
+                name: "Notes",
+                route: "/dashboard/notes"
+            },
+            {
+                icon: Icons.doocumentIcon,
+                name: "Documents",
+                route: "/dashboard/documents"
             }
         ],
         states: [

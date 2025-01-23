@@ -9,7 +9,7 @@ const commonSlice = createSlice({
         modalShow: false,
         moalSize: "md",
         modal_from: null,
-        modal_type: null, 
+        modal_type: null,
         modal_close_btn: true,
 
         canvasShow: false,
@@ -71,7 +71,7 @@ const commonSlice = createSlice({
         updateCurrentNavMenuIndex(state, action) {
             return {
                 ...state,
-                currentMenuName: action.payload?.name,
+                currentMenuName: action.payload,
             }
         },
         updateScreenCurrentDimension(state, action) {
@@ -378,7 +378,6 @@ const commonSlice = createSlice({
                 state.modalShow = true
                 state.modal_close_btn = false
             })
-
     }
 })
 

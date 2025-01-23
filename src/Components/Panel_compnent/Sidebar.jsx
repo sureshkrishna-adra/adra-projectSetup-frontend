@@ -1,9 +1,9 @@
 import React from 'react'
-import Img from 'components/Img/Img';
-import NavLinkComp from 'components/Nav/NavLink';
-import OffCanvas from 'components/Offcanvas/OffCanvas';
-import ButtonComponent from 'components/Button/Button';
+import Img from 'Components/Img/Img';
+import OffCanvas from 'Components/Offcanvas/OffCanvas';
+import ButtonComponent from 'Components/Button/Button';
 import { CiLogout } from "react-icons/ci";
+import NavLinkComp from 'Components/Router_components/NavLink';
 
 const Sidebar = ({
     menuOptions,
@@ -101,11 +101,11 @@ const Sidebar = ({
                                 <div className="sidebar-header">
                                     <div className="row h-100 align-items-center justify-content-center">
                                         <div className="col text-center">
-                                            {headerFun('33%', '50px', companyLogo)}
+                                            {headerFun('80rem', '50rem', companyLogo)}
                                         </div>
                                     </div>
                                 </div>
-                                <hr className=''/>
+                                <hr className='' />
                             </>
                             :
                             null
@@ -136,7 +136,7 @@ const Sidebar = ({
                 offcanvasHeaderTitleClassname="col-11"
                 offcanvasBodyClassname={footer ? "sidebar-body-with-footer py-3" : "sidebar-body-without-footer"}
                 canvasBody={bodyFun("offcanvas")}
-                // canvasFooter={footerFun("offcanvas")}
+            // canvasFooter={footerFun("offcanvas")}
             />
         </>
     )
